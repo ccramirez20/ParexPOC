@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador de CVs - Minsait</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #480E2A;
+            --primary-dark: #260717;
+            --secondary: #FF0054;
+            --light: #E3E2DA;
+            --white: #FFFFFF;
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--primary-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
+        }
+        
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .logo {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 20px 0 10px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        
+        .left-panel {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .right-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .panel {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .upload-box {
+            flex: 1;
+            min-width: 300px;
+            border: 2px dashed #999;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-box:hover {
+            border-color: var(--secondary);
+            background-color: rgba(255, 0, 84, 0.05);
+        }
+        
+        .upload-box i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .upload-box h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .upload-box p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+        }
+        
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-name {
+            display: flex;
+            align-items: center;
+        }
+        
+        .file-name i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .file-remove {
+            color: var(--secondary);
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        .results-area {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .cv-list {
+            flex: 1;
+            min-width: 250px;
+            max-width: 300px;
+        }
+        
+        .cv-detail {
+            flex: 2;
+        }
+        
+        .cv-item {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .cv-item:hover {
+            background-color: rgba(72, 14, 42, 0.1);
+        }
+        
+        .cv-item.selected {
+            border-left-color: var(--secondary);
+            background-color: rgba(72, 14, 42, 0.1);
+        }
+        
+        .match-score {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            color: var(--white);
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .good-match {
+            background-color: #2ecc71;
+        }
+        
+        .medium-match {
+            background-color: #f39c12;
+        }
+        
+        .low-match {
+            background-color: var(--secondary);
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 15px;
+            background-color: rgba(227, 226, 218, 0.5);
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+        
+        .info-label {
+            flex: 1;
+            font-weight: bold;
+        }
+        
+        .info-value {
+            flex: 2;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background-color: rgba(72, 14, 42, 0.1);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 0 5px 5px 0;
+        }
+        
+        .missing-skill {
+            color: var(--secondary);
+            background-color: rgba(255, 0, 84, 0.1);
+        }
+        
+        .chat-area {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            min-height: 300px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            background-color: var(--white);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: var(--white);
+            margin-left: auto;
+        }
+        
+        .bot-message {
+            background-color: #f1f1f1;
+            color: var(--primary-dark);
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            outline: none;
+        }
+        
+        .chat-input input:focus {
+            border-color: var(--secondary);
+        }
+        
+        .chat-input button {
+            padding: 0 20px;
+        }
+        
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(38, 7, 23, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--secondary);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-text {
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .upload-area {
+                flex-direction: column;
+            }
+            
+            .results-area {
+                flex-direction: column;
+            }
+            
+            .cv-list {
+                max-width: 100%;
+            }
+            
+            .right-panel {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="/static/indra-logo.png" alt="Minsait Logo" class="logo">
+            <h1>Analizador de CVs y Ofertas de Trabajo</h1>
+            <p>Sube múltiples CVs y una descripción de trabajo para encontrar los mejores candidatos</p>
+        </header>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="panel">
+                    <h2>Subir archivos para análisis</h2>
+                    <div class="upload-area">
+                        <label class="upload-box">
+                            <i class="fas fa-file-upload"></i>
+                            <h3>Subir CVs</h3>
+                            <p>Archivos PDF o Word</p>
+                            <input type="file" id="cvFiles" multiple accept=".pdf,.doc,.docx" class="hidden">
+                        </label>
+                        <label class="upload-box">
+                            <i class="fas fa-briefcase"></i>
+                            <h3>Descripción de Puesto</h3>
+                            <p>Archivo PDF, Word o texto plano</p>
+                            <input type="file" id="jobDesc" accept=".pdf,.doc,.docx,.txt" class="hidden">
+                        </label>
+                    </div>
+                    <button class="btn btn-success" onclick="handleAnalysis()">Analizar Candidatos</button>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+
+                <div class="panel results-area" id="results" style="display: none;">
+                    <div class="cv-list" id="cvList"></div>
+                    <div class="cv-detail" id="cvDetail">
+                        <div class="tabs">
+                            <div class="tab active" data-tab="general">General</div>
+                            <div class="tab" data-tab="skills">Habilidades</div>
+                            <div class="tab" data-tab="chat">Chat</div>
+                        </div>
+
+                        <div class="tab-content active" id="tab-general">
+                            <div class="info-row"><div class="info-label">Nombre:</div><div class="info-value" id="candidateName"></div></div>
+                            <div class="info-row"><div class="info-label">Resumen:</div><div class="info-value" id="candidateSummary"></div></div>
+                        </div>
+
+                        <div class="tab-content" id="tab-skills">
+                            <div class="info-row"><div class="info-label">Habilidades encontradas:</div><div class="info-value" id="candidateSkills"></div></div>
+                            <div class="info-row"><div class="info-label">Habilidades faltantes:</div><div class="info-value" id="missingSkills"></div></div>
+                        </div>
+
+                        <div class="tab-content chat-area" id="tab-chat">
+                            <div class="chat-messages" id="chatMessages"></div>
+                            <div class="chat-input">
+                                <input type="text" id="chatInput" placeholder="Escribe tu pregunta...">
+                                <button class="btn" onclick="sendMessage()">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="panel">
+                    <h2>Instrucciones</h2>
+                    <p>1. Sube varios CVs y una descripción de puesto.</p>
+                    <p>2. Presiona "Analizar Candidatos".</p>
+                    <p>3. Revisa las coincidencias y conversa con el asistente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="progressOverlay" class="progress-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <div class="progress-text">Analizando documentos...</div>
+    </div>
+
+    <script>
+        const cvFiles = document.getElementById('cvFiles');
+        const jobDesc = document.getElementById('jobDesc');
+        const fileList = document.getElementById('fileList');
+
+        function handleAnalysis() {
+            document.getElementById('progressOverlay').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('progressOverlay').style.display = 'none';
+                document.getElementById('results').style.display = 'flex';
+                // Aquí deberías llamar a tu API y poblar los resultados reales
+                populateDummyResults();
+            }, 2000);
+        }
+
+        function populateDummyResults() {
+            const cvList = document.getElementById('cvList');
+            cvList.innerHTML = '';
+            ['Juan Pérez', 'Ana Gómez', 'Carlos Ruiz'].forEach((name, i) => {
+                const item = document.createElement('div');
+                item.className = 'cv-item';
+                item.innerHTML = `
+                    <div class="file-name">
+                        <span class="match-score ${['low-match','medium-match','good-match'][i]}">${60 + i * 10}%</span>
+                        ${name}
+                    </div>
+                `;
+                item.onclick = () => selectCandidate(name);
+                cvList.appendChild(item);
+            });
+            selectCandidate('Juan Pérez');
+        }
+
+        function selectCandidate(name) {
+            document.querySelectorAll('.cv-item').forEach(el => el.classList.remove('selected'));
+            const selected = [...document.querySelectorAll('.cv-item')].find(el => el.innerText.includes(name));
+            selected?.classList.add('selected');
+
+            document.getElementById('candidateName').innerText = name;
+            document.getElementById('candidateSummary').innerText = 'Profesional con experiencia en análisis de datos y desarrollo de soluciones.';
+            document.getElementById('candidateSkills').innerHTML = '<span class="skill-tag">Python</span> <span class="skill-tag">SQL</span> <span class="skill-tag">FastAPI</span>';
+            document.getElementById('missingSkills').innerHTML = '<span class="skill-tag missing-skill">Docker</span> <span class="skill-tag missing-skill">Kubernetes</span>';
+        }
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const container = document.getElementById('chatMessages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user-message';
+            userMessage.innerText = text;
+            container.appendChild(userMessage);
+            input.value = '';
+
+            setTimeout(() => {
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot-message';
+                botMessage.innerText = 'Gracias por tu pregunta. Estoy procesándola...';
+                container.appendChild(botMessage);
+                container.scrollTop = container.scrollHeight;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
