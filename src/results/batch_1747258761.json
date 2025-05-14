@@ -1,0 +1,384 @@
+[
+    {
+        "nombre": "Marcela Andrade",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Prof. En Administración de Empresas",
+                "institucion": "Universidad Alta Pinta",
+                "ubicacion": null,
+                "periodo": null,
+                "descripcion": null
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Gerente en Industrias Ariova",
+                "empresa": "Industrias Ariova",
+                "ubicacion": null,
+                "periodo": "2030 - presente",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Rodríguez y familia",
+                "empresa": "Rodríguez y familia",
+                "ubicacion": null,
+                "periodo": "2025 - 2030",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Borcelle",
+                "empresa": "Borcelle",
+                "ubicacion": null,
+                "periodo": "2022 - 2025",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Ensigna",
+                "empresa": "Ensigna",
+                "ubicacion": null,
+                "periodo": "2020 - 2022",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            }
+        ],
+        "habilidades": [
+            "Liderazgo",
+            "Comunicación",
+            "Toma de decisiones"
+        ],
+        "cursos_certificaciones": [],
+        "archivo": "CV Demo 1.pdf",
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 20,
+            "experiencia_relevante": {
+                "puntuacion": 40,
+                "explicacion": "El candidato tiene experiencia como gerente en diferentes empresas, lo cual demuestra habilidades de liderazgo y toma de decisiones, pero no cuenta con experiencia específica en desarrollo web ni con las tecnologías requeridas para el puesto."
+            },
+            "habilidades_coincidentes": [],
+            "habilidades_faltantes": [
+                "Desarrollo web",
+                "Python",
+                "JavaScript",
+                "React, Angular o Vue.js",
+                "Bases de datos SQL y NoSQL",
+                "Metodologías ágiles",
+                "Servicios cloud",
+                "Git y CI/CD",
+                "API REST y GraphQL",
+                "Trabajo en equipo"
+            ],
+            "anos_experiencia": 0,
+            "nivel_idioma": null,
+            "fortalezas": [
+                "Experiencia en roles de liderazgo",
+                "Habilidades de comunicación",
+                "Experiencia en la gestión de equipos"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia en desarrollo web y tecnologías requeridas",
+                "Necesidad de adquirir conocimientos en desarrollo de aplicaciones web",
+                "Falta de experiencia en metodologías ágiles y herramientas de desarrollo"
+            ],
+            "recomendacion": "No recomendado",
+            "justificacion": "Aunque el candidato tiene fortalezas en liderazgo y comunicación, su falta de experiencia en desarrollo web y las tecnologías específicas necesarias para el puesto lo hacen no apto para la posición de Desarrollador Full Stack. Se recomienda buscar candidatos con experiencia técnica relevante."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Industrias Ariova",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Rodríguez y familia",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Borcelle",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Ensigna",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 4,
+            "empresas_confirmadas": 0,
+            "confiabilidad_general": 0.0,
+            "mensaje": "Se verificaron 0 de 4 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 16:39:56"
+    },
+    {
+        "nombre": "Alfredo Torres",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Maestría en Administración de Empresas",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2030 - 2030",
+                "descripcion": null
+            },
+            {
+                "titulo": "Especialización en Finanzas Corporativas",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2026 - 2026",
+                "descripcion": null
+            },
+            {
+                "titulo": "Profesional en Administración",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2025 - 2025",
+                "descripcion": null
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Gerente en Borcelle",
+                "empresa": "Borcelle",
+                "ubicacion": null,
+                "periodo": "2030 - 2030",
+                "descripcion": "Puros in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Ensigna",
+                "empresa": "Ensigna",
+                "ubicacion": null,
+                "periodo": "2025 - 2025",
+                "descripcion": "Puros in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            }
+        ],
+        "habilidades": [
+            "Liderazgo",
+            "Comunicación",
+            "Toma de decisiones",
+            "Gestión del tiempo",
+            "Trabajo en equipo",
+            "Pensamiento estratégico"
+        ],
+        "cursos_certificaciones": [],
+        "archivo": "CV Demo 2.pdf",
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 20,
+            "experiencia_relevante": {
+                "puntuacion": 30,
+                "explicacion": "El candidato tiene experiencia como gerente en empresas no relacionadas con el desarrollo web, lo cual no cumple con los requisitos específicos del puesto."
+            },
+            "habilidades_coincidentes": [
+                "Trabajo en equipo"
+            ],
+            "habilidades_faltantes": [
+                "Desarrollo web",
+                "Python",
+                "JavaScript",
+                "React, Angular o Vue.js",
+                "Bases de datos SQL y NoSQL",
+                "Metodologías ágiles",
+                "Servicios cloud",
+                "Git y CI/CD pipelines",
+                "API REST y GraphQL",
+                "Inglés intermedio o avanzado"
+            ],
+            "anos_experiencia": 0,
+            "nivel_idioma": null,
+            "fortalezas": [
+                "Experiencia en roles de liderazgo",
+                "Habilidades de comunicación",
+                "Capacidad de toma de decisiones",
+                "Pensamiento estratégico"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia en desarrollo web y tecnologías específicas requeridas para el puesto"
+            ],
+            "recomendacion": "No recomendado",
+            "justificacion": "El candidato, a pesar de tener fortalezas en liderazgo y habilidades blandas, carece de la experiencia y habilidades técnicas necesarias para el puesto de Desarrollador Full Stack. Su experiencia previa no se alinea con los requisitos del trabajo, por lo que no se recomienda su contratación para esta posición."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Borcelle",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Ensigna",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 2,
+            "empresas_confirmadas": 0,
+            "confiabilidad_general": 0.0,
+            "mensaje": "Se verificaron 0 de 2 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 16:39:56"
+    },
+    {
+        "nombre": "Christian Ramírez",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Maestría en Bioingeniería",
+                "institucion": "Gimnasio Los Portales",
+                "ubicacion": null,
+                "periodo": "2021 - 2023",
+                "descripcion": "Grado Cum Laude y reconocimiento de excelencia académica"
+            },
+            {
+                "titulo": "Pregrado en Biología",
+                "institucion": "Outlier",
+                "ubicacion": "Colombia",
+                "periodo": "2015 - 2019",
+                "descripcion": "Reconocimiento excelencia académica y mejores SaberPro Colombia"
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Profesor de biología para el área de bachillerato IB",
+                "empresa": "Gimnasio Los Portales",
+                "ubicacion": null,
+                "periodo": "Agosto 2024 - Presente",
+                "descripcion": "Planeación y desarrollo de clases para MYP y DP. Dirección de evaluaciones internas y monografías. Manejo de grupos. Tutorías para colegio y universidad en química, física, matemáticas y biología."
+            },
+            {
+                "puesto": "Entrenador de Inteligencia Artificial",
+                "empresa": "Outlier",
+                "ubicacion": null,
+                "periodo": "Mayo 2024 - Presente",
+                "descripcion": "Entrenamiento a modelos de lenguaje grandes (LLM) para la región de LATAM. Escritura de texto para el entrenamiento de modelos. Evaluación del resultado de búsqueda en modelos de IA."
+            },
+            {
+                "puesto": "Tutor",
+                "empresa": "ASSET Tutores",
+                "ubicacion": null,
+                "periodo": "Agosto 2017 - Mayo 2019",
+                "descripcion": "Tutor para estudiantes de colegios IB en diversas materias. Preparación para pruebas ICFES (Saber) y IB."
+            }
+        ],
+        "habilidades": [
+            "VICON - Nexus (Captura de Movimiento)",
+            "Microsoft Excel",
+            "Google Workspace",
+            "Python y Javascript",
+            "SQL",
+            "Excelente comunicación asertiva y adaptabilidad",
+            "Capacidad para trabajar de forma independiente y en equipo",
+            "Orientado al detalle y capaz de gestionar múltiples tareas simultáneamente",
+            "Orientado a encontrar soluciones efectivas para problemas tanto propios como de los clientes"
+        ],
+        "cursos_certificaciones": [
+            {
+                "nombre": "CS50 Introduction to Programming",
+                "institucion": "Harvard",
+                "fecha": "2024",
+                "descripcion": null
+            },
+            {
+                "nombre": "Certificado en Conceptos Claves para la Construcción de un Modelo de Negocio Sostenible",
+                "institucion": "INALDE",
+                "fecha": "2023",
+                "descripcion": null
+            },
+            {
+                "nombre": "Certificados en Aprendizaje Basado en Proyectos, Educación Ambiental y Docencia Virtual",
+                "institucion": "Politécnico de Colombia",
+                "fecha": "2021",
+                "descripcion": null
+            },
+            {
+                "nombre": "Diplomado Programming for Everybody",
+                "institucion": "University of Michigan, Coursera",
+                "fecha": "2019",
+                "descripcion": null
+            },
+            {
+                "nombre": "Proceso de Liderazgo",
+                "institucion": "LVC",
+                "fecha": "2011",
+                "descripcion": null
+            }
+        ],
+        "archivo": "CV Español.pdf",
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 65,
+            "experiencia_relevante": {
+                "puntuacion": 80,
+                "explicacion": "El candidato cuenta con experiencia en desarrollo web y programación, aunque no específicamente en frameworks como React, Angular o Vue.js."
+            },
+            "habilidades_coincidentes": [
+                "Python y Javascript",
+                "SQL",
+                "Capacidad de trabajar en equipo"
+            ],
+            "habilidades_faltantes": [
+                "Experiencia con frameworks como React, Angular o Vue.js",
+                "Experiencia con metodologías ágiles (Scrum, Kanban)",
+                "Familiaridad con servicios cloud (AWS, Azure o Google Cloud)",
+                "Git y CI/CD pipelines",
+                "API REST y GraphQL"
+            ],
+            "anos_experiencia": 2,
+            "nivel_idioma": null,
+            "fortalezas": [
+                "Experiencia en desarrollo web y programación",
+                "Conocimientos sólidos en Python y Javascript",
+                "Experiencia en bases de datos SQL",
+                "Capacidad de trabajar en equipo"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia en frameworks específicos como React, Angular o Vue.js",
+                "Necesidad de adquirir conocimientos en metodologías ágiles, servicios cloud, Git y CI/CD pipelines, API REST y GraphQL"
+            ],
+            "recomendacion": "Recomendado",
+            "justificacion": "El candidato posee una sólida formación académica y experiencia relevante en desarrollo web y programación, lo cual le otorga una base sólida para desempeñarse en el puesto. Aunque le faltan algunas habilidades específicas requeridas, su capacidad de aprendizaje y adaptabilidad podrían permitirle adquirirlas rápidamente. Se recomienda considerarlo para el puesto con la posibilidad de brindarle formación adicional en las áreas identificadas como faltantes."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Gimnasio Los Portales",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Outlier",
+                    "verificada": true,
+                    "fuente": "Wikipedia",
+                    "descripcion": "In statistics, an outlier is a data point that differs significantly from other observations. An outlier may be due to a variability in the measurement, an indication of novel data, or it may be the r...",
+                    "confiabilidad": "Alta"
+                },
+                {
+                    "nombre": "ASSET Tutores",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 3,
+            "empresas_confirmadas": 1,
+            "confiabilidad_general": 33.33333333333333,
+            "mensaje": "Se verificaron 1 de 3 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 16:39:56"
+    }
+]

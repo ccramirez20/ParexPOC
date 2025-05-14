@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descripción del Trabajo</title>
+    <link rel="stylesheet" href="/static/style.css"> </head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="/static/indra-logo.png" alt="Indra Logo" class="logo-icon" style="height: 40px;">
+                <span>CVMatcher</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/job-description">Descripción del Trabajo</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="card">
+                <h2 class="card-title">Descripción del Trabajo</h2>
+                <form id="job-description-form">
+                    <div class="form-group">
+                        <label for="job-description">Edita la Descripción del Trabajo:</label>
+                        <textarea id="job-description" name="description" class="form-control" rows="10">
+                            {{ descripcion_trabajo }}
+                        </textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 Minsait - CVMatcher - Análisis Inteligente de Currículums</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('job-description-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const description = document.getElementById('job-description').value;
+
+            try {
+                const response = await fetch('/api/update-job-description', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description: description })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                } else {
+                    alert('Error al actualizar la descripción');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al enviar la solicitud');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -8,6 +8,14 @@ import logging
 from datetime import datetime
 import re
 import time
+import uvicorn
+from fastapi import FastAPI, UploadFile, File, Form, Request, BackgroundTasks
+from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import shutil
+from pydantic import BaseModel
+from pathlib import Path
 
 # Configuración de logging para un mejor seguimiento de errores y procesos
 logging.basicConfig(
@@ -20,12 +28,26 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Inicialización de FastAPI
+app = FastAPI(title="CV Parser API", description="API para análisis de currículums vitae")
+
+# Configurar directorios
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+TEMPLATES_DIR = BASE_DIR / "templates"
+UPLOAD_DIR = BASE_DIR / "uploads"
+RESULTS_DIR = BASE_DIR / "results"
+
+# Crear directorios si no existen
+for dir_path in [STATIC_DIR, TEMPLATES_DIR, UPLOAD_DIR, RESULTS_DIR]:
+    dir_path.mkdir(exist_ok=True, parents=True)
+
+# Configuración de templates y archivos estáticos
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
 # Configuración de la API de Azure OpenAI
 openai.api_key = "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"  # Reemplaza con tu clave real
-
-# Definimos las rutas: carpeta con los CVs y archivo de salida
-CARPETA_CVS = "./data"
-ARCHIVO_SALIDA = "informacion_cvs.json"
 
 # URL del servicio OCR
 OCR_URL = "https://api.ocr.space/parse/image"
@@ -52,6 +74,24 @@ Responsabilidades:
 - Participar en code reviews
 - Resolver problemas técnicos complejos
 """
+
+# Modelos Pydantic para la API
+class JobDescription(BaseModel):
+    description: str = DESCRIPCION_TRABAJO
+    
+class CVAnalysisResult(BaseModel):
+    analysis_id: str
+    status: str
+    progress: int = 0
+    result: Optional[Dict] = None
+    
+class AnalysisStatus(BaseModel):
+    status: str
+    progress: int
+    message: str
+
+# Estado global para seguimiento de tareas en background
+analysis_tasks = {}
 
 # Función para extraer texto de un PDF usando PyMuPDF (fitz)
 def extraer_texto_pdf(ruta_archivo: str) -> str:
@@ -191,7 +231,7 @@ def analizar_cv_con_llm(texto: str) -> Dict:
         logger.error(f"Error al procesar con Azure OpenAI: {str(e)}")
         return {"error": f"Error en la API de Azure OpenAI: {str(e)}"}
 
-# NUEVO: Función para evaluar la compatibilidad con la descripción de trabajo
+# Función para evaluar la compatibilidad con la descripción de trabajo
 def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION_TRABAJO) -> Dict:
     """
     Evalúa qué tan bien se ajusta un candidato a la descripción del trabajo.
@@ -251,7 +291,7 @@ def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION
             "recomendacion": "No evaluado"
         }
 
-# NUEVO: Función para verificar la existencia de las empresas
+# Función para verificar la existencia de las empresas
 def verificar_empresas(cv_info: Dict) -> Dict:
     """
     Verifica la existencia y reputación de las empresas mencionadas en el CV.
@@ -338,7 +378,7 @@ def verificar_empresas(cv_info: Dict) -> Dict:
     }
 
 # Función para analizar un documento completo
-def analizar_documento(ruta_archivo: str) -> Dict:
+def analizar_documento(ruta_archivo: str, descripcion_trabajo: str = DESCRIPCION_TRABAJO) -> Dict:
     """
     Proceso completo de análisis de un CV: extracción de texto y análisis estructurado.
     """
@@ -363,7 +403,7 @@ def analizar_documento(ruta_archivo: str) -> Dict:
     # Evaluamos la compatibilidad con el trabajo
     if "error" not in resultado:
         logger.info("Evaluando compatibilidad del candidato...")
-        evaluacion = evaluar_compatibilidad(resultado)
+        evaluacion = evaluar_compatibilidad(resultado, descripcion_trabajo)
         resultado["evaluacion_compatibilidad"] = evaluacion
         
         logger.info("Verificando empresas del candidato...")
@@ -371,43 +411,6 @@ def analizar_documento(ruta_archivo: str) -> Dict:
         resultado["verificacion_empresas"] = verificacion_empresas
     
     return resultado
-
-# Procesa todos los CVs en la carpeta especificada
-def procesar_todos_los_cvs(carpeta: str) -> List[Dict]:
-    """
-    Procesa todos los documentos PDF en la carpeta especificada.
-    """
-    resultados = []
-    archivos_pdf = [f for f in os.listdir(carpeta) if f.lower().endswith(".pdf")]
-    
-    if not archivos_pdf:
-        logger.warning(f"No se encontraron archivos PDF en {carpeta}")
-        return []
-    
-    logger.info(f"Encontrados {len(archivos_pdf)} archivos PDF para procesar")
-    
-    for i, archivo in enumerate(archivos_pdf, 1):
-        logger.info(f"Procesando archivo {i}/{len(archivos_pdf)}: {archivo}")
-        ruta = os.path.join(carpeta, archivo)
-        resultado = analizar_documento(ruta)
-        resultados.append(resultado)
-        logger.info(f"Completado análisis de {archivo}")
-    
-    return resultados
-
-# Guarda el resultado en un archivo JSON estructurado
-def guardar_json(data: List[Dict], archivo_salida: str):
-    """
-    Guarda los resultados en un archivo JSON con formato legible.
-    """
-    try:
-        with open(archivo_salida, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-        logger.info(f"Resultados guardados correctamente en {archivo_salida}")
-        return True
-    except Exception as e:
-        logger.error(f"Error al guardar el archivo JSON: {e}")
-        return False
 
 # Función para generar un resumen ejecutivo
 def generar_resumen_ejecutivo(resultados: List[Dict]) -> str:
@@ -505,44 +508,401 @@ def validar_y_enriquecer_resultados(resultados: List[Dict]) -> List[Dict]:
     
     return resultados_validados
 
-# Punto de entrada principal del script
-def main():
+# Función para procesar un CV en background
+async def procesar_cv_background(file_path: str, analysis_id: str, job_description: str = DESCRIPCION_TRABAJO):
     """
-    Función principal que orquesta todo el proceso.
+    Procesa un CV en segundo plano y actualiza el estado del análisis.
     """
-    logger.info("======= INICIANDO ANÁLISIS DE CVs =======")
-    logger.info(f"Carpeta de entrada: {CARPETA_CVS}")
-    logger.info(f"Archivo de salida: {ARCHIVO_SALIDA}")
-    
-    # Verificamos que la carpeta exista
-    if not os.path.exists(CARPETA_CVS):
-        logger.error(f"La carpeta {CARPETA_CVS} no existe")
-        return
-    
-    # Procesamos todos los CVs
-    resultados = procesar_todos_los_cvs(CARPETA_CVS)
-    
-    # Validamos y enriquecemos los resultados
-    resultados_finales = validar_y_enriquecer_resultados(resultados)
-    
-    # Guardamos los resultados
-    exito = guardar_json(resultados_finales, ARCHIVO_SALIDA)
-    
-    # Generamos un resumen ejecutivo
-    resumen = generar_resumen_ejecutivo(resultados_finales)
-    
-    # Guardamos el resumen en un archivo separado
-    with open("resumen_ejecutivo.txt", "w", encoding="utf-8") as f:
-        f.write(resumen)
-    
-    if exito:
-        logger.info(f"Proceso completado exitosamente. Se procesaron {len(resultados_finales)} documentos.")
-        logger.info("Resumen ejecutivo guardado en 'resumen_ejecutivo.txt'")
-        print("\n" + resumen)
-    else:
-        logger.error("Error al guardar los resultados.")
-    
-    logger.info("======= FIN DEL PROCESO =======")
+    try:
+        # Actualizar estado a "procesando"
+        analysis_tasks[analysis_id] = {
+            "status": "processing",
+            "progress": 10,
+            "message": "Extrayendo texto del CV..."
+        }
+        
+        # Analizar el documento
+        resultado = analizar_documento(file_path, job_description)
+        
+        # Actualizar progreso
+        analysis_tasks[analysis_id]["progress"] = 50
+        analysis_tasks[analysis_id]["message"] = "Validando resultados..."
+        
+        # Validar y enriquecer el resultado
+        resultado_validado = validar_y_enriquecer_resultados([resultado])[0]
+        
+        # Guardar el resultado en un archivo JSON
+        result_file = RESULTS_DIR / f"{analysis_id}.json"
+        with open(result_file, "w", encoding="utf-8") as f:
+            json.dump(resultado_validado, f, indent=4, ensure_ascii=False)
+        
+        # Actualizar estado a "completado"
+        analysis_tasks[analysis_id] = {
+            "status": "completed",
+            "progress": 100,
+            "message": "Análisis completado",
+            "result": resultado_validado
+        }
+        
+        logger.info(f"Análisis {analysis_id} completado exitosamente")
+        
+    except Exception as e:
+        logger.error(f"Error en el análisis {analysis_id}: {e}")
+        # Actualizar estado a "error"
+        analysis_tasks[analysis_id] = {
+            "status": "error",
+            "progress": 100,
+            "message": f"Error: {str(e)}"
+        }
 
+# Procesar múltiples CVs en background
+async def procesar_cvs_batch_background(file_paths: List[str], batch_id: str, job_description: str = DESCRIPCION_TRABAJO):
+    """
+    Procesa un lote de CVs en segundo plano.
+    """
+    try:
+        total_files = len(file_paths)
+        resultados = []
+        
+        analysis_tasks[batch_id] = {
+            "status": "processing",
+            "progress": 0,
+            "message": f"Iniciando procesamiento de {total_files} CVs...",
+            "total_files": total_files,
+            "processed_files": 0
+        }
+        
+        for i, file_path in enumerate(file_paths, 1):
+            # Actualizar progreso
+            progress = int((i-1) / total_files * 100)
+            analysis_tasks[batch_id].update({
+                "progress": progress,
+                "message": f"Procesando CV {i}/{total_files}: {os.path.basename(file_path)}",
+                "processed_files": i-1
+            })
+            
+            # Analizar el documento
+            resultado = analizar_documento(file_path, job_description)
+            resultados.append(resultado)
+            
+            # Actualizar contador de procesados
+            analysis_tasks[batch_id]["processed_files"] = i
+        
+        # Validar y enriquecer los resultados
+        resultados_validados = validar_y_enriquecer_resultados(resultados)
+        
+        # Generar resumen ejecutivo
+        resumen = generar_resumen_ejecutivo(resultados_validados)
+        
+        # Guardar los resultados
+        result_file = RESULTS_DIR / f"{batch_id}.json"
+        with open(result_file, "w", encoding="utf-8") as f:
+            json.dump(resultados_validados, f, indent=4, ensure_ascii=False)
+        
+        # Guardar el resumen
+        summary_file = RESULTS_DIR / f"{batch_id}_resumen.txt"
+        with open(summary_file, "w", encoding="utf-8") as f:
+            f.write(resumen)
+        
+        # Actualizar estado a "completado"
+        analysis_tasks[batch_id] = {
+            "status": "completed",
+            "progress": 100,
+            "message": f"Análisis de {total_files} CVs completado",
+            "total_files": total_files,
+            "processed_files": total_files,
+            "results": resultados_validados,
+            "summary": resumen
+        }
+        
+        logger.info(f"Procesamiento por lotes {batch_id} completado exitosamente")
+        
+    except Exception as e:
+        logger.error(f"Error en el procesamiento por lotes {batch_id}: {e}")
+        analysis_tasks[batch_id] = {
+            "status": "error",
+            "progress": 100,
+            "message": f"Error: {str(e)}"
+        }
+
+# Rutas de la API FastAPI
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    """
+    Página principal de la aplicación.
+    """
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/api/upload-cv/")
+async def upload_cv(background_tasks: BackgroundTasks, file: UploadFile = File(...), job_description: str = Form(DESCRIPCION_TRABAJO)):
+    """
+    Endpoint para subir y analizar un CV.
+    """
+    try:
+        # Generar un ID único para este análisis
+        analysis_id = f"cv_{int(time.time())}_{file.filename.replace(' ', '_')}"
+        
+        # Guardar el archivo
+        file_path = UPLOAD_DIR / file.filename
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Iniciar análisis en segundo plano
+        analysis_tasks[analysis_id] = {
+            "status": "queued",
+            "progress": 0,
+            "message": "En cola para procesamiento"
+        }
+        
+        background_tasks.add_task(procesar_cv_background, str(file_path), analysis_id, job_description)
+        
+        return JSONResponse({
+            "message": "CV recibido y en proceso de análisis",
+            "analysis_id": analysis_id
+        })
+        
+    except Exception as e:
+        logger.error(f"Error al procesar el archivo subido: {e}")
+        return JSONResponse({
+            "error": f"Error al procesar el archivo: {str(e)}"
+        }, status_code=500)
+
+@app.post("/api/upload-batch/")
+async def upload_cv_batch(background_tasks: BackgroundTasks, files: List[UploadFile] = File(...), job_description: str = Form(DESCRIPCION_TRABAJO)):
+    """
+    Endpoint para subir y analizar múltiples CVs.
+    """
+    try:
+        if not files:
+            return JSONResponse({
+                "error": "No se proporcionaron archivos"
+            }, status_code=400)
+        
+        # Generar un ID único para este lote
+        batch_id = f"batch_{int(time.time())}"
+        
+        # Guardar los archivos
+        file_paths = []
+        for file in files:
+            file_path = UPLOAD_DIR / file.filename
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            file_paths.append(str(file_path))
+        
+        # Iniciar análisis en segundo plano
+        background_tasks.add_task(procesar_cvs_batch_background, file_paths, batch_id, job_description)
+        
+        return JSONResponse({
+            "message": f"Lote de {len(files)} CVs recibido y en proceso de análisis",
+            "batch_id": batch_id
+        })
+        
+    except Exception as e:
+        logger.error(f"Error al procesar el lote de archivos: {e}")
+        return JSONResponse({
+            "error": f"Error al procesar los archivos: {str(e)}"
+        }, status_code=500)
+
+@app.get("/api/analysis-status/{analysis_id}")
+async def get_analysis_status(analysis_id: str):
+    """
+    Endpoint para consultar el estado de un análisis.
+    """
+    if analysis_id not in analysis_tasks:
+        return JSONResponse({
+            "error": "ID de análisis no encontrado"
+        }, status_code=404)
+    
+    return JSONResponse(analysis_tasks[analysis_id])
+
+@app.get("/api/analysis-result/{analysis_id}")
+async def get_analysis_result(analysis_id: str):
+    """
+    Endpoint para obtener el resultado de un análisis.
+    """
+    if analysis_id not in analysis_tasks:
+        # Intentamos buscar el archivo de resultados
+        result_file = RESULTS_DIR / f"{analysis_id}.json"
+        if result_file.exists():
+            with open(result_file, "r", encoding="utf-8") as f:
+                return JSONResponse(json.load(f))
+        return JSONResponse({
+            "error": "ID de análisis no encontrado"
+        }, status_code=404)
+    
+    task_info = analysis_tasks[analysis_id]
+    
+    if task_info["status"] != "completed":
+        return JSONResponse({
+            "error": "El análisis aún no ha finalizado",
+            "status": task_info["status"],
+            "progress": task_info["progress"]
+        }, status_code=400)
+    
+    return JSONResponse(task_info.get("result", {}))
+
+@app.get("/api/batch-result/{batch_id}")
+async def get_batch_result(batch_id: str):
+    """A     
+    Endpoint para obtener los resultados de un lote.
+    """
+    # Intentamos buscar el archivo de resultados
+    result_file = RESULTS_DIR / f"{batch_id}.json"
+    
+    if not result_file.exists():
+        if batch_id not in analysis_tasks:
+            return JSONResponse({
+                "error": "ID de lote no encontrado"
+            }, status_code=404)
+        
+        task_info = analysis_tasks[batch_id]
+        
+        if task_info["status"] != "completed":
+            return JSONResponse({
+                "error": "El procesamiento del lote aún no ha finalizado",
+                "status": task_info["status"],
+                "progress": task_info["progress"]
+            }, status_code=400)
+    
+    with open(result_file, "r", encoding="utf-8") as f:
+        return JSONResponse(json.load(f))
+
+@app.get("/api/batch-summary/{batch_id}")
+async def get_batch_summary(batch_id: str):
+    """
+    Endpoint para obtener el resumen ejecutivo de un lote.
+    """
+    summary_file = RESULTS_DIR / f"{batch_id}_resumen.txt"
+    
+    if not summary_file.exists():
+        if batch_id not in analysis_tasks:
+            return JSONResponse({
+                "error": "ID de lote no encontrado"
+            }, status_code=404)
+        
+        task_info = analysis_tasks[batch_id]
+        
+        if task_info["status"] != "completed":
+            return JSONResponse({
+                "error": "El procesamiento del lote aún no ha finalizado",
+                "status": task_info["status"],
+                "progress": task_info["progress"]
+            }, status_code=400)
+        
+        # Si está en la memoria pero no en disco
+        if "summary" in task_info:
+            return JSONResponse({
+                "summary": task_info["summary"]
+            })
+    
+    with open(summary_file, "r", encoding="utf-8") as f:
+        return JSONResponse({
+            "summary": f.read()
+        })
+
+@app.get("/view/cv/{analysis_id}", response_class=HTMLResponse)
+async def view_cv_result(request: Request, analysis_id: str):
+    """
+    Página para visualizar el resultado del análisis de un CV.
+    """
+    # Buscar el resultado
+    result_file = RESULTS_DIR / f"{analysis_id}.json"
+    
+    if not result_file.exists():
+        if analysis_id not in analysis_tasks:
+            return templates.TemplateResponse("error.html", {
+                "request": request,
+                "message": "Análisis no encontrado"
+            })
+        
+        task_info = analysis_tasks[analysis_id]
+        
+        if task_info["status"] != "completed":
+            return templates.TemplateResponse("processing.html", {
+                "request": request,
+                "analysis_id": analysis_id,
+                "status": task_info["status"],
+                "progress": task_info["progress"],
+                "message": task_info["message"]
+            })
+        
+        result = task_info.get("result", {})
+    else:
+        with open(result_file, "r", encoding="utf-8") as f:
+            result = json.load(f)
+    
+    return templates.TemplateResponse("cv_result.html", {
+        "request": request,
+        "analysis_id": analysis_id,
+        "result": result
+    })
+
+@app.get("/view/batch/{batch_id}", response_class=HTMLResponse)
+async def view_batch_result(request: Request, batch_id: str):
+    """
+    Página para visualizar los resultados de un lote de CVs.
+    """
+    result_file = RESULTS_DIR / f"{batch_id}.json"
+    summary_file = RESULTS_DIR / f"{batch_id}_resumen.txt"
+    
+    if not result_file.exists():
+        if batch_id not in analysis_tasks:
+            return templates.TemplateResponse("error.html", {
+                "request": request,
+                "message": "Análisis por lotes no encontrado"
+            })
+        
+        task_info = analysis_tasks[batch_id]
+        
+        if task_info["status"] != "completed":
+            return templates.TemplateResponse("batch_processing.html", {
+                "request": request,
+                "batch_id": batch_id,
+                "status": task_info["status"],
+                "progress": task_info["progress"],
+                "message": task_info["message"],
+                "total_files": task_info.get("total_files", 0),
+                "processed_files": task_info.get("processed_files", 0)
+            })
+        
+        results = task_info.get("results", [])
+        summary = task_info.get("summary", "")
+    else:
+        with open(result_file, "r", encoding="utf-8") as f:
+            results = json.load(f)
+        
+        with open(summary_file, "r", encoding="utf-8") as f:
+            summary = f.read()
+    
+    return templates.TemplateResponse("batch_result.html", {
+        "request": request,
+        "batch_id": batch_id,
+        "results": results,
+        "summary": summary
+    })
+
+@app.get("/job-description", response_class=HTMLResponse)
+async def view_job_description(request: Request):
+    """
+    Página para ver y editar la descripción del trabajo.
+    """
+    return templates.TemplateResponse("job_description.html", {
+        "request": request,
+        "descripcion_trabajo": DESCRIPCION_TRABAJO
+    })
+
+@app.post("/api/update-job-description")
+async def update_job_description(description: JobDescription):
+    """
+    Endpoint para actualizar la descripción del trabajo.
+    """
+    global DESCRIPCION_TRABAJO
+    DESCRIPCION_TRABAJO = description.description
+    
+    return JSONResponse({
+        "message": "Descripción del trabajo actualizada correctamente"
+    })
+
+# Ejecutar la aplicación si se ejecuta directamente
 if __name__ == "__main__":
-    main()
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

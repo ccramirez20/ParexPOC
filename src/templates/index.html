@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVMatcher - Análisis de Currículums</title>
+    <style>
+        :root {
+            --primary: #480E2A;
+            --secondary: #E3E2DA;
+            --accent: #260717;
+            --white: #FFFFFF;
+            --gray: #6c757d;
+            --light-gray: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary);
+        }
+        
+        .hero {
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .main-content {
+            padding: 3rem 0;
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .file-drop-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            padding: 2rem;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            transition: 0.3s;
+            background-color: var(--light-gray);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .file-drop-area:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-drop-area input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-drop-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .file-drop-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-drop-subtext {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .selected-files {
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .selected-file {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--light-gray);
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            font-weight: 500;
+            color: var(--white);
+            text-align: center;
+            vertical-align: middle;
+            user-select: none;
+            background-color: var(--primary);
+            border: 1px solid transparent;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 0.75rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="/static/indra-logo.png" alt="Indra Logo" class="logo-icon" style="height: 40px;">
+                <span>CVMatcher</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/job-description">Descripción del Trabajo</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Análisis Inteligente de Currículums</h1>
+            <p>Evalúa candidatos de forma automática con inteligencia artificial para encontrar el mejor talento para tu empresa</p>
+        </div>
+    </section>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" data-tab="individual">Análisis Individual</div>
+                <div class="tab" data-tab="batch">Análisis por Lotes</div>
+            </div>
+            
+            <div class="tab-content active" id="individual-tab">
+                <div class="card">
+                    <h2 class="card-title">Analizar un CV</h2>
+                    <form id="individual-form">
+                        <div class="form-group">
+                            <label for="individual-cv">Selecciona un archivo PDF:</label>
+                            <div class="file-drop-area">
+                                <span class="file-drop-icon">📄</span>
+                                <span class="file-drop-text">Arrastra y suelta tu CV aquí</span>
+                                <span class="file-drop-subtext">o haz clic para seleccionar</span>
+                                <input type="file" id="individual-cv" name="file" accept=".pdf" required>
+                            </div>
+                            <div class="selected-files" id="individual-selected-file"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block">Analizar CV</button>
+                    </form>
+                    
+                    <div class="loading" id="individual-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Analizando CV, por favor espera...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="batch-tab">
+                <div class="card">
+                    <h2 class="card-title">Analizar múltiples CVs</h2>
+                    <form id="batch-form">
+                        <div class="form-group">
+                            <label for="batch-cvs">Selecciona varios archivos PDF:</label>
+                            <div class="file-drop-area">
+                                <span class="file-drop-icon">📚</span>
+                                <span class="file-drop-text">Arrastra y suelta múltiples CVs aquí</span>
+                                <span class="file-drop-subtext">o haz clic para seleccionar</span>
+                                <input type="file" id="batch-cvs" name="files" accept=".pdf" multiple required>
+                            </div>
+                            <div class="selected-files" id="batch-selected-files"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-block">Analizar Lote de CVs</button>
+                    </form>
+                    
+                    <div class="loading" id="batch-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Analizando lote de CVs, por favor espera...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Extracción Inteligente</h3>
+                    <p>Nuestro sistema extrae automáticamente la información relevante de los CVs, ahorrándote tiempo en la revisión manual.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Compatibilidad con el Puesto</h3>
+                    <p>Evaluamos la compatibilidad de cada candidato con tu descripción de trabajo para encontrar los mejores perfiles.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Análisis Detallado</h3>
+                    <p>Obtienes un informe completo con habilidades, experiencia, educación y recomendaciones para cada candidato.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 Minsait - CVMatcher - Análisis Inteligente de Currículums</p>
+        </div>
+    </footer>
+
+    <script>
+        // Cambio de pestañas
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remover clase active de todas las pestañas
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Añadir clase active a la pestaña clickeada
+                tab.classList.add('active');
+                
+                // Ocultar todos los contenidos de pestañas
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Mostrar el contenido correspondiente
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Manejo de archivos individuales
+        document.getElementById('individual-cv').addEventListener('change', function(e) {
+            const fileDiv = document.getElementById('individual-selected-file');
+            fileDiv.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileElement = document.createElement('div');
+                fileElement.className = 'selected-file';
+                fileElement.innerHTML = `
+                    <span>${file.name}</span>
+                    <small>${(file.size / 1024).toFixed(1)} KB</small>
+                `;
+                fileDiv.appendChild(fileElement);
+            }
+        });
+        
+        // Manejo de archivos múltiples
+        document.getElementById('batch-cvs').addEventListener('change', function(e) {
+            const filesDiv = document.getElementById('batch-selected-files');
+            filesDiv.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                Array.from(this.files).forEach(file => {
+                    const fileElement = document.createElement('div');
+                    fileElement.className = 'selected-file';
+                    fileElement.innerHTML = `
+                        <span>${file.name}</span>
+                        <small>${(file.size / 1024).toFixed(1)} KB</small>
+                    `;
+                    filesDiv.appendChild(fileElement);
+                });
+            }
+        });
+        
+        // Formulario de análisis individual
+        document.getElementById('individual-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('individual-cv');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Por favor selecciona un archivo PDF');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            // Mostrar loading
+            document.getElementById('individual-loading').style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/upload-cv/', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.analysis_id) {
+                    // Redirigir a la página de resultados
+                    checkAnalysisStatus(result.analysis_id);
+                } else {
+                    alert('Error al procesar el CV');
+                    document.getElementById('individual-loading').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al enviar el archivo');
+                document.getElementById('individual-loading').style.display = 'none';
+            }
+        });
+        
+        // Formulario de análisis por lotes
+        document.getElementById('batch-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const filesInput = document.getElementById('batch-cvs');
+            if (!filesInput.files || filesInput.files.length === 0) {
+                alert('Por favor selecciona al menos un archivo PDF');
+                return;
+            }
+            
+            const formData = new FormData();
+            Array.from(filesInput.files).forEach(file => {
+                formData.append('files', file);
+            });
+            
+            // Mostrar loading
+            document.getElementById('batch-loading').style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/upload-batch/', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.batch_id) {
+                    // Redirigir a la página de resultados
+                    checkBatchStatus(result.batch_id);
+                } else {
+                    alert('Error al procesar los CVs');
+                    document.getElementById('batch-loading').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al enviar los archivos');
+                document.getElementById('batch-loading').style.display = 'none';
+            }
+        });
+        
+        // Función para verificar el estado del análisis individual
+        async function checkAnalysisStatus(analysisId) {
+            try {
+                const response = await fetch(`/api/analysis-status/${analysisId}`);
+                const result = await response.json();
+                
+                if (result.status === 'completed') {
+                    // Análisis completado, redirigir a la página de resultados
+                    window.location.href = `/view/cv/${analysisId}`;
+                } else if (result.status === 'error') {
+                    alert(`Error en el análisis: ${result.message}`);
+                    document.getElementById('individual-loading').style.display = 'none';
+                } else {
+                    // Análisis en progreso, verificar nuevamente después de un tiempo
+                    setTimeout(() => checkAnalysisStatus(analysisId), 2000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al verificar el estado del análisis');
+                document.getElementById('individual-loading').style.display = 'none';
+            }
+        }
+        
+        // Función para verificar el estado del análisis por lotes
+        async function checkBatchStatus(batchId) {
+            try {
+                const response = await fetch(`/api/analysis-status/${batchId}`);
+                const result = await response.json();
+                
+                if (result.status === 'completed') {
+                    // Análisis completado, redirigir a la página de resultados
+                    window.location.href = `/view/batch/${batchId}`;
+                } else if (result.status === 'error') {
+                    alert(`Error en el análisis: ${result.message}`);
+                    document.getElementById('batch-loading').style.display = 'none';
+                } else {
+                    // Análisis en progreso, verificar nuevamente después de un tiempo
+                    setTimeout(() => checkBatchStatus(batchId), 2000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al verificar el estado del análisis');
+                document.getElementById('batch-loading').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -135,3 +135,175 @@
 2025-05-14 15:08:15,379 - INFO - Proceso completado exitosamente. Se procesaron 3 documentos.
 2025-05-14 15:08:15,381 - INFO - Resumen ejecutivo guardado en 'resumen_ejecutivo.txt'
 2025-05-14 15:08:15,381 - INFO - ======= FIN DEL PROCESO =======
+2025-05-14 15:47:32,132 - ERROR - Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+2025-05-14 15:50:09,198 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 15:50:09,215 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 15:50:15,855 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 15:50:15,855 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 15:50:18,952 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 15:50:18,952 - INFO - Verificando empresas del candidato...
+2025-05-14 15:50:18,952 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-14 15:50:19,707 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 15:50:20,605 - INFO - Análisis cv_1747255809_CV_Español.pdf completado exitosamente
+2025-05-14 15:53:16,535 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-14 15:53:16,545 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 15:53:21,914 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 15:53:21,914 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 15:53:25,092 - INFO - Evaluación de compatibilidad completada para MARCELA ANDRADE
+2025-05-14 15:53:25,092 - INFO - Verificando empresas del candidato...
+2025-05-14 15:53:25,092 - INFO - Verificando empresa: Industrias Ariova
+2025-05-14 15:53:25,967 - INFO - Verificando empresa: Rodríguez y familia
+2025-05-14 15:53:26,837 - INFO - Verificando empresa: Borcelle
+2025-05-14 15:53:27,698 - INFO - Verificando empresa: Ensigna
+2025-05-14 15:53:28,594 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 15:53:28,594 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 15:53:33,344 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 15:53:33,344 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 15:53:36,106 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 15:53:36,106 - INFO - Verificando empresas del candidato...
+2025-05-14 15:53:36,106 - INFO - Verificando empresa: Borcelle
+2025-05-14 15:53:36,846 - INFO - Verificando empresa: Ensigna
+2025-05-14 15:53:37,586 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 15:53:37,600 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 15:53:44,385 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 15:53:44,386 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 15:53:47,596 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 15:53:47,596 - INFO - Verificando empresas del candidato...
+2025-05-14 15:53:47,596 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 15:53:48,504 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-14 15:53:49,247 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 15:53:49,989 - INFO - Procesamiento por lotes batch_1747255996 completado exitosamente
+2025-05-14 16:05:54,669 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 16:05:54,678 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:06:01,703 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:06:01,703 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:06:05,210 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 16:06:05,210 - INFO - Verificando empresas del candidato...
+2025-05-14 16:06:05,210 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:06:05,974 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:06:06,724 - INFO - Análisis cv_1747256754_CV_Demo_2.pdf completado exitosamente
+2025-05-14 16:32:48,199 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:32:48,217 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:32:54,301 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:32:54,301 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:32:57,509 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:32:57,509 - INFO - Verificando empresas del candidato...
+2025-05-14 16:32:57,517 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 16:32:58,437 - INFO - Verificando empresa: Outlier
+2025-05-14 16:32:59,178 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:33:00,078 - INFO - Análisis cv_1747258368_CV_Español.pdf completado exitosamente
+2025-05-14 16:39:21,765 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-14 16:39:21,773 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:39:27,519 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:39:27,520 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:39:31,572 - INFO - Evaluación de compatibilidad completada para MARCELA ANDRADE
+2025-05-14 16:39:31,572 - INFO - Verificando empresas del candidato...
+2025-05-14 16:39:31,572 - INFO - Verificando empresa: Industrias Ariova
+2025-05-14 16:39:32,457 - INFO - Verificando empresa: Rodríguez y familia
+2025-05-14 16:39:33,337 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:39:34,230 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:39:35,096 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 16:39:35,106 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:39:39,287 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:39:39,287 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:39:42,354 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 16:39:42,354 - INFO - Verificando empresas del candidato...
+2025-05-14 16:39:42,354 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:39:43,099 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:39:43,859 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:39:43,875 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:39:50,548 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:39:50,548 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:39:53,761 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:39:53,761 - INFO - Verificando empresas del candidato...
+2025-05-14 16:39:53,761 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 16:39:54,517 - INFO - Verificando empresa: Outlier
+2025-05-14 16:39:55,281 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:39:56,022 - INFO - Procesamiento por lotes batch_1747258761 completado exitosamente
+2025-05-14 16:42:14,102 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-14 16:42:14,110 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:42:21,080 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:42:21,080 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:42:23,854 - INFO - Evaluación de compatibilidad completada para MARCELA ANDRADE
+2025-05-14 16:42:23,854 - INFO - Verificando empresas del candidato...
+2025-05-14 16:42:23,854 - INFO - Verificando empresa: Industrias Ariova
+2025-05-14 16:42:24,617 - INFO - Verificando empresa: Rodríguez y familia
+2025-05-14 16:42:25,359 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:42:26,102 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:42:26,843 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 16:42:26,850 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:42:33,030 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:42:33,030 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:42:36,090 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 16:42:36,090 - INFO - Verificando empresas del candidato...
+2025-05-14 16:42:36,090 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:42:36,835 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:42:37,588 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:42:37,604 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:42:45,500 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:42:45,500 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:42:48,551 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:42:48,551 - INFO - Verificando empresas del candidato...
+2025-05-14 16:42:48,551 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 16:42:49,310 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-14 16:42:50,051 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:42:50,794 - INFO - Procesamiento por lotes batch_1747258934 completado exitosamente
+2025-05-14 16:51:22,893 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 16:51:22,902 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:51:28,770 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:51:28,770 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:51:31,734 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 16:51:31,734 - INFO - Verificando empresas del candidato...
+2025-05-14 16:51:31,734 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:51:32,504 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:51:33,270 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:51:33,285 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:51:39,705 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:51:39,705 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:51:43,028 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:51:43,028 - INFO - Verificando empresas del candidato...
+2025-05-14 16:51:43,028 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 16:51:43,769 - INFO - Verificando empresa: Outlier
+2025-05-14 16:51:44,511 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:51:45,271 - INFO - Procesamiento por lotes batch_1747259482 completado exitosamente
+2025-05-14 16:52:20,535 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:52:20,541 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:52:25,861 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:52:25,861 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:52:29,683 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:52:29,683 - INFO - Verificando empresas del candidato...
+2025-05-14 16:52:29,683 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-14 16:52:30,432 - INFO - Verificando empresa: Outlier
+2025-05-14 16:52:31,173 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:52:31,913 - INFO - Análisis cv_1747259540_CV_Español.pdf completado exitosamente
+2025-05-14 16:54:08,382 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-14 16:54:08,391 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:54:17,013 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:54:17,013 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:54:20,622 - INFO - Evaluación de compatibilidad completada para MARCELA ANDRADE
+2025-05-14 16:54:20,622 - INFO - Verificando empresas del candidato...
+2025-05-14 16:54:20,622 - INFO - Verificando empresa: Industrias Ariova
+2025-05-14 16:54:21,386 - INFO - Verificando empresa: Rodríguez y familia
+2025-05-14 16:54:22,151 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:54:22,893 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:54:23,653 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-14 16:54:23,660 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 16:54:30,815 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:54:30,816 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:54:33,304 - INFO - Evaluación de compatibilidad completada para Alfredo Torres
+2025-05-14 16:54:33,304 - INFO - Verificando empresas del candidato...
+2025-05-14 16:54:33,304 - INFO - Verificando empresa: Borcelle
+2025-05-14 16:54:34,047 - INFO - Verificando empresa: Ensigna
+2025-05-14 16:54:34,810 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:54:34,823 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-14 16:54:40,034 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 16:54:40,034 - INFO - Evaluando compatibilidad del candidato...
+2025-05-14 16:54:43,275 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-14 16:54:43,275 - INFO - Verificando empresas del candidato...
+2025-05-14 16:54:43,275 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-14 16:54:44,099 - INFO - Verificando empresa: ASSET Tutores
+2025-05-14 16:54:44,842 - INFO - Procesamiento por lotes batch_1747259648 completado exitosamente

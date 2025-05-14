@@ -1,0 +1,149 @@
+{
+    "nombre": "Christian Ramírez",
+    "edad": null,
+    "estudios": [
+        {
+            "titulo": "Maestría en Bioingeniería",
+            "institucion": "Gimnasio Los Portales",
+            "ubicacion": null,
+            "periodo": "2021 - 2023",
+            "descripcion": "Grado Cum Laude y reconocimiento de excelencia académica"
+        },
+        {
+            "titulo": "Pregrado en Biología",
+            "institucion": "Outlier",
+            "ubicacion": null,
+            "periodo": "2015 - 2019",
+            "descripcion": "Reconocimiento excelencia académica y mejores SaberPro Colombia"
+        }
+    ],
+    "experiencia_previa": [
+        {
+            "puesto": "Profesor de biología para el área de bachillerato IB en inglés",
+            "empresa": "Gimnasio Los Portales",
+            "ubicacion": null,
+            "periodo": "Agosto 2024 - Presente",
+            "descripcion": "Planeación y desarrollo de clases para MYP y DP. Dirección de evaluaciones internas y monografías. Manejo de grupos. Tutorías para colegio y universidad en química, física, matemáticas y biología."
+        },
+        {
+            "puesto": "Entrenador de Inteligencia Artificial",
+            "empresa": "Outlier",
+            "ubicacion": null,
+            "periodo": "Mayo 2024 - Presente",
+            "descripcion": "Entrenamiento a modelos de lenguaje grandes (LLM) para la región de LATAM. Escritura de texto para el entrenamiento de modelos. Evaluación del resultado de búsqueda en modelos de IA."
+        },
+        {
+            "puesto": "Tutor para estudiantes de colegios IB en diversas materias",
+            "empresa": "ASSET Tutores",
+            "ubicacion": null,
+            "periodo": "Agosto 2017 - Mayo 2019",
+            "descripcion": "Preparación para pruebas ICFES (Saber) y IB."
+        }
+    ],
+    "habilidades": [
+        "VICON - Nexus (Captura de Movimiento)",
+        "Microsoft Excel",
+        "Google Workspace",
+        "Python y Javascript",
+        "SQL",
+        "Excelente comunicación asertiva y adaptabilidad",
+        "Capacidad para trabajar de forma independiente y en equipo",
+        "Orientado al detalle y capaz de gestionar múltiples tareas simultáneamente",
+        "Orientado a encontrar soluciones efectivas para problemas tanto propios como de los clientes"
+    ],
+    "cursos_certificaciones": [
+        {
+            "nombre": "CS50 Introduction to Programming",
+            "institucion": "Harvard",
+            "fecha": "2024",
+            "descripcion": null
+        },
+        {
+            "nombre": "Certificado en Conceptos Claves para la Construcción de un Modelo de Negocio Sostenible",
+            "institucion": "INALDE",
+            "fecha": "2023",
+            "descripcion": null
+        },
+        {
+            "nombre": "Certificados en Aprendizaje Basado en Proyectos, Educación Ambiental y Docencia Virtual",
+            "institucion": "Politécnico de Colombia",
+            "fecha": "2021",
+            "descripcion": null
+        },
+        {
+            "nombre": "Diplomado Programming for Everybody",
+            "institucion": "University of Michigan, Coursera",
+            "fecha": "2019",
+            "descripcion": null
+        },
+        {
+            "nombre": "Proceso de Liderazgo",
+            "institucion": "LVC",
+            "fecha": "2011",
+            "descripcion": null
+        }
+    ],
+    "archivo": "CV Español.pdf",
+    "evaluacion_compatibilidad": {
+        "compatibilidad_general": 65,
+        "experiencia_relevante": {
+            "puntuacion": 80,
+            "explicacion": "El candidato tiene experiencia en desarrollo web y programación, aunque no específicamente como Desarrollador Full Stack. Sin embargo, su experiencia en entrenamiento de IA y tutorías demuestra habilidades transferibles."
+        },
+        "habilidades_coincidentes": [
+            "Python y Javascript",
+            "SQL",
+            "Capacidad de trabajar en equipo"
+        ],
+        "habilidades_faltantes": [
+            "Experiencia con frameworks como React, Angular o Vue.js",
+            "Experiencia con metodologías ágiles (Scrum, Kanban)",
+            "Familiaridad con servicios cloud (AWS, Azure o Google Cloud)",
+            "Git y CI/CD pipelines",
+            "API REST y GraphQL"
+        ],
+        "anos_experiencia": 2,
+        "nivel_idioma": "Intermedio",
+        "fortalezas": [
+            "Experiencia en programación y desarrollo web",
+            "Habilidades en Python y Javascript",
+            "Experiencia en trabajo en equipo"
+        ],
+        "areas_mejora": [
+            "Falta de experiencia específica como Desarrollador Full Stack",
+            "Necesidad de adquirir conocimientos en frameworks y herramientas específicas mencionadas en la descripción del trabajo"
+        ],
+        "recomendacion": "Recomendado",
+        "justificacion": "Aunque el candidato no cumple con todos los requisitos específicos del puesto, su experiencia y habilidades en programación, trabajo en equipo y capacidad de aprendizaje lo hacen recomendable para el puesto. Se sugiere proporcionarle formación adicional en las áreas faltantes para potenciar su desempeño como Desarrollador Full Stack."
+    },
+    "verificacion_empresas": {
+        "empresas_verificadas": [
+            {
+                "nombre": "Gimnasio Los Portales",
+                "verificada": false,
+                "fuente": "Búsqueda manual requerida",
+                "descripcion": "Requiere verificación manual",
+                "confiabilidad": "Pendiente"
+            },
+            {
+                "nombre": "Outlier",
+                "verificada": true,
+                "fuente": "Wikipedia",
+                "descripcion": "In statistics, an outlier is a data point that differs significantly from other observations. An outlier may be due to a variability in the measurement, an indication of novel data, or it may be the r...",
+                "confiabilidad": "Alta"
+            },
+            {
+                "nombre": "ASSET Tutores",
+                "verificada": false,
+                "fuente": "Búsqueda manual requerida",
+                "descripcion": "Requiere verificación manual",
+                "confiabilidad": "Pendiente"
+            }
+        ],
+        "total_empresas": 3,
+        "empresas_confirmadas": 1,
+        "confiabilidad_general": 33.33333333333333,
+        "mensaje": "Se verificaron 1 de 3 empresas"
+    },
+    "fecha_procesamiento": "2025-05-14 16:52:31"
+}
