@@ -1,0 +1,96 @@
+2025-05-14 12:46:01,877 - INFO - ======= INICIANDO ANÁLISIS DE CVs =======
+2025-05-14 12:46:01,877 - INFO - Carpeta de entrada: ./data
+2025-05-14 12:46:01,877 - INFO - Archivo de salida: informacion_cvs.json
+2025-05-14 12:46:01,877 - INFO - Encontrados 3 archivos PDF para procesar
+2025-05-14 12:46:01,877 - INFO - Procesando archivo 1/3: CV Demo 1.pdf
+2025-05-14 12:46:01,877 - INFO - Iniciando análisis del documento: ./data\CV Demo 1.pdf
+2025-05-14 12:46:01,878 - INFO - El archivo ./data\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 12:46:22,933 - ERROR - Error en el proceso OCR para ./data\CV Demo 1.pdf: HTTPSConnectionPool(host='api.ocr.space', port=443): Max retries exceeded with url: /parse/image (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000002720F32C510>, 'Connection to api.ocr.space timed out. (connect timeout=120)'))
+2025-05-14 12:46:22,933 - WARNING - No se pudo extraer texto de ./data\CV Demo 1.pdf
+2025-05-14 12:46:22,933 - INFO - Completado análisis de CV Demo 1.pdf
+2025-05-14 12:46:22,933 - INFO - Procesando archivo 2/3: CV Demo 2.pdf
+2025-05-14 12:46:22,933 - INFO - Iniciando análisis del documento: ./data\CV Demo 2.pdf
+2025-05-14 12:46:22,933 - INFO - El archivo ./data\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 12:46:43,961 - ERROR - Error en el proceso OCR para ./data\CV Demo 2.pdf: HTTPSConnectionPool(host='api.ocr.space', port=443): Max retries exceeded with url: /parse/image (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000002725F1AC110>, 'Connection to api.ocr.space timed out. (connect timeout=120)'))
+2025-05-14 12:46:43,961 - WARNING - No se pudo extraer texto de ./data\CV Demo 2.pdf
+2025-05-14 12:46:43,961 - INFO - Completado análisis de CV Demo 2.pdf
+2025-05-14 12:46:43,961 - INFO - Procesando archivo 3/3: CV Español.pdf
+2025-05-14 12:46:43,961 - INFO - Iniciando análisis del documento: ./data\CV Español.pdf
+2025-05-14 12:46:43,966 - INFO - Texto extraído correctamente de ./data\CV Español.pdf
+2025-05-14 12:46:44,881 - ERROR - Error al procesar con Azure OpenAI: Invalid response object from API: '{ "statusCode": 404, "message": "Resource not found" }' (HTTP response code was 404)
+2025-05-14 12:46:44,882 - INFO - Completado análisis de CV Español.pdf
+2025-05-14 12:46:44,882 - INFO - Resultados guardados correctamente en informacion_cvs.json
+2025-05-14 12:46:44,882 - INFO - Proceso completado exitosamente. Se procesaron 3 documentos.
+2025-05-14 12:46:44,882 - INFO - ======= FIN DEL PROCESO =======
+2025-05-14 14:06:39,382 - INFO - ======= INICIANDO ANÁLISIS DE CVs =======
+2025-05-14 14:06:39,384 - INFO - Carpeta de entrada: ./data
+2025-05-14 14:06:39,384 - INFO - Archivo de salida: informacion_cvs.json
+2025-05-14 14:06:39,384 - INFO - Encontrados 3 archivos PDF para procesar
+2025-05-14 14:06:39,384 - INFO - Procesando archivo 1/3: CV Demo 1.pdf
+2025-05-14 14:06:39,384 - INFO - Iniciando análisis del documento: ./data\CV Demo 1.pdf
+2025-05-14 14:06:39,384 - INFO - El archivo ./data\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:06:41,275 - INFO - error_code=invalid_api_key error_message='Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:06:41,275 - ERROR - Error al procesar con Azure OpenAI: Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-14 14:06:41,275 - INFO - Completado análisis de CV Demo 1.pdf
+2025-05-14 14:06:41,275 - INFO - Procesando archivo 2/3: CV Demo 2.pdf
+2025-05-14 14:06:41,275 - INFO - Iniciando análisis del documento: ./data\CV Demo 2.pdf
+2025-05-14 14:06:41,277 - INFO - El archivo ./data\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:06:43,015 - INFO - error_code=invalid_api_key error_message='Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:06:43,015 - ERROR - Error al procesar con Azure OpenAI: Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-14 14:06:43,015 - INFO - Completado análisis de CV Demo 2.pdf
+2025-05-14 14:06:43,015 - INFO - Procesando archivo 3/3: CV Español.pdf
+2025-05-14 14:06:43,015 - INFO - Iniciando análisis del documento: ./data\CV Español.pdf
+2025-05-14 14:06:43,020 - INFO - Texto extraído correctamente de ./data\CV Español.pdf
+2025-05-14 14:06:43,131 - INFO - error_code=invalid_api_key error_message='Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:06:43,132 - ERROR - Error al procesar con Azure OpenAI: Incorrect API key provided: sk-proj-********************************************************************************************************************************************************Nv4A. You can find your API key at https://platform.openai.com/account/api-keys.
+2025-05-14 14:06:43,132 - INFO - Completado análisis de CV Español.pdf
+2025-05-14 14:06:43,132 - INFO - Resultados guardados correctamente en informacion_cvs.json
+2025-05-14 14:06:43,132 - INFO - Proceso completado exitosamente. Se procesaron 3 documentos.
+2025-05-14 14:06:43,132 - INFO - ======= FIN DEL PROCESO =======
+2025-05-14 14:07:23,097 - INFO - ======= INICIANDO ANÁLISIS DE CVs =======
+2025-05-14 14:07:23,097 - INFO - Carpeta de entrada: ./data
+2025-05-14 14:07:23,097 - INFO - Archivo de salida: informacion_cvs.json
+2025-05-14 14:07:23,097 - INFO - Encontrados 3 archivos PDF para procesar
+2025-05-14 14:07:23,097 - INFO - Procesando archivo 1/3: CV Demo 1.pdf
+2025-05-14 14:07:23,097 - INFO - Iniciando análisis del documento: ./data\CV Demo 1.pdf
+2025-05-14 14:07:23,097 - INFO - El archivo ./data\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:07:25,688 - INFO - error_code=None error_message='Invalid URL (POST /v1/engines/gpt-4/chat/completions)' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:07:25,688 - ERROR - Error al procesar con Azure OpenAI: Invalid URL (POST /v1/engines/gpt-4/chat/completions)
+2025-05-14 14:07:25,688 - INFO - Completado análisis de CV Demo 1.pdf
+2025-05-14 14:07:25,688 - INFO - Procesando archivo 2/3: CV Demo 2.pdf
+2025-05-14 14:07:25,688 - INFO - Iniciando análisis del documento: ./data\CV Demo 2.pdf
+2025-05-14 14:07:25,688 - INFO - El archivo ./data\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:07:27,738 - INFO - error_code=None error_message='Invalid URL (POST /v1/engines/gpt-4/chat/completions)' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:07:27,738 - ERROR - Error al procesar con Azure OpenAI: Invalid URL (POST /v1/engines/gpt-4/chat/completions)
+2025-05-14 14:07:27,738 - INFO - Completado análisis de CV Demo 2.pdf
+2025-05-14 14:07:27,738 - INFO - Procesando archivo 3/3: CV Español.pdf
+2025-05-14 14:07:27,738 - INFO - Iniciando análisis del documento: ./data\CV Español.pdf
+2025-05-14 14:07:27,743 - INFO - Texto extraído correctamente de ./data\CV Español.pdf
+2025-05-14 14:07:28,098 - INFO - error_code=None error_message='Invalid URL (POST /v1/engines/gpt-4/chat/completions)' error_param=None error_type=invalid_request_error message='OpenAI API error received' stream_error=False
+2025-05-14 14:07:28,098 - ERROR - Error al procesar con Azure OpenAI: Invalid URL (POST /v1/engines/gpt-4/chat/completions)
+2025-05-14 14:07:28,098 - INFO - Completado análisis de CV Español.pdf
+2025-05-14 14:07:28,098 - INFO - Resultados guardados correctamente en informacion_cvs.json
+2025-05-14 14:07:28,098 - INFO - Proceso completado exitosamente. Se procesaron 3 documentos.
+2025-05-14 14:07:28,098 - INFO - ======= FIN DEL PROCESO =======
+2025-05-14 14:13:25,010 - INFO - ======= INICIANDO ANÁLISIS DE CVs =======
+2025-05-14 14:13:25,010 - INFO - Carpeta de entrada: ./data
+2025-05-14 14:13:25,010 - INFO - Archivo de salida: informacion_cvs.json
+2025-05-14 14:13:25,010 - INFO - Encontrados 3 archivos PDF para procesar
+2025-05-14 14:13:25,010 - INFO - Procesando archivo 1/3: CV Demo 1.pdf
+2025-05-14 14:13:25,010 - INFO - Iniciando análisis del documento: ./data\CV Demo 1.pdf
+2025-05-14 14:13:25,012 - INFO - El archivo ./data\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:13:30,784 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 14:13:30,784 - INFO - Completado análisis de CV Demo 1.pdf
+2025-05-14 14:13:30,784 - INFO - Procesando archivo 2/3: CV Demo 2.pdf
+2025-05-14 14:13:30,784 - INFO - Iniciando análisis del documento: ./data\CV Demo 2.pdf
+2025-05-14 14:13:30,784 - INFO - El archivo ./data\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-14 14:13:36,562 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 14:13:36,562 - INFO - Completado análisis de CV Demo 2.pdf
+2025-05-14 14:13:36,562 - INFO - Procesando archivo 3/3: CV Español.pdf
+2025-05-14 14:13:36,562 - INFO - Iniciando análisis del documento: ./data\CV Español.pdf
+2025-05-14 14:13:36,568 - INFO - Texto extraído correctamente de ./data\CV Español.pdf
+2025-05-14 14:13:46,850 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-14 14:13:46,850 - INFO - Completado análisis de CV Español.pdf
+2025-05-14 14:13:46,851 - INFO - Resultados guardados correctamente en informacion_cvs.json
+2025-05-14 14:13:46,851 - INFO - Proceso completado exitosamente. Se procesaron 3 documentos.
+2025-05-14 14:13:46,851 - INFO - ======= FIN DEL PROCESO =======

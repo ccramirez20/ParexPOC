@@ -1,0 +1,188 @@
+[
+    {
+        "nombre": "Marcela Andrade",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Prof. En Administración de Empresas",
+                "institucion": "Universidad Alta Pinta",
+                "ubicacion": null,
+                "periodo": null,
+                "descripcion": null
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Gerente en Industrias Ariova",
+                "empresa": "Industrias Ariova",
+                "ubicacion": null,
+                "periodo": "2030 - presente",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Rodríguez y familia",
+                "empresa": "Rodríguez y familia",
+                "ubicacion": null,
+                "periodo": "2025 - 2030",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Borcelle",
+                "empresa": "Borcelle",
+                "ubicacion": null,
+                "periodo": "2022 - 2025",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Ensigna",
+                "empresa": "Ensigna",
+                "ubicacion": null,
+                "periodo": "2020 - 2022",
+                "descripcion": "Purus in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            }
+        ],
+        "habilidades": [
+            "Liderazgo",
+            "Comunicación",
+            "Toma de decisiones"
+        ],
+        "cursos_certificaciones": [],
+        "archivo": "CV Demo 1.pdf",
+        "fecha_procesamiento": "2025-05-14 14:13:46"
+    },
+    {
+        "nombre": "Alfredo Torres",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Maestría en Administración de Empresas",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2030 - 2030",
+                "descripcion": null
+            },
+            {
+                "titulo": "Especialización en Finanzas Corporativas",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2026 - 2026",
+                "descripcion": null
+            },
+            {
+                "titulo": "Profesional en Administración",
+                "institucion": "Universidad Del Tano",
+                "ubicacion": null,
+                "periodo": "2025 - 2025",
+                "descripcion": null
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Gerente en Borcelle",
+                "empresa": "Borcelle",
+                "ubicacion": null,
+                "periodo": "2030 - 2030",
+                "descripcion": "Puros in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            },
+            {
+                "puesto": "Gerente en Ensigna",
+                "empresa": "Ensigna",
+                "ubicacion": null,
+                "periodo": "2025 - 2025",
+                "descripcion": "Puros in mollis nunc sed id semper risus in hendrerit gravida rutrum quisque non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus."
+            }
+        ],
+        "habilidades": [
+            "Liderazgo",
+            "Comunicación",
+            "Toma de decisiones",
+            "Gestión del tiempo",
+            "Trabajo en equipo",
+            "Pensamiento estratégico"
+        ],
+        "cursos_certificaciones": [],
+        "archivo": "CV Demo 2.pdf",
+        "fecha_procesamiento": "2025-05-14 14:13:46"
+    },
+    {
+        "nombre": "Christian Ramírez",
+        "edad": null,
+        "estudios": [
+            {
+                "titulo": "Maestría en Bioingeniería - Grado Cum Laude y reconocimiento de excelencia académica",
+                "institucion": "Gimnasio Los Portales",
+                "ubicacion": null,
+                "periodo": "2021 - 2023",
+                "descripcion": "Profesor de biología para el área de bachillerato IB en inglés. Planeación y desarrollo de clases para MYP y DP. Dirección de evaluaciones internas y monografías. Manejo de grupos. Tutorías para colegio y universidad en química, física, matemáticas y biología."
+            },
+            {
+                "titulo": "Pregrado en Biología - Reconocimiento excelencia académica y mejores SaberPro Colombia",
+                "institucion": "Outlier",
+                "ubicacion": null,
+                "periodo": "2015 - 2019",
+                "descripcion": "Independiente | Mayo 2019 - Presente. Preparación para pruebas específicas: IB, SAT, ICFES (Saber). Tutorías para colegio y universidad en química, física, matemáticas y biología. Desarrollo de clases en español e ingles. Acompañamiento en tareas y técnicas de estudio."
+            }
+        ],
+        "experiencia_previa": [
+            {
+                "puesto": "Entrenador de Inteligencia Artificial",
+                "empresa": "Pontificia Universidad Javeriana",
+                "ubicacion": null,
+                "periodo": "Presente",
+                "descripcion": "Entrenamiento a modelos de lenguaje grandes (LLM) para la región de LATAM. Escritura de texto para el entrenamiento de modelos. Evaluación del resultado de búsqueda en modelos de IA."
+            },
+            {
+                "puesto": "Tutor",
+                "empresa": "ASSET Tutores",
+                "ubicacion": null,
+                "periodo": "Agosto 2017 - Mayo 2019",
+                "descripcion": "Tutor para estudiantes de colegios IB en diversas materias. Preparación para pruebas ICFES (Saber) y IB."
+            }
+        ],
+        "habilidades": [
+            "VICON - Nexus (Captura de Movimiento)",
+            "Microsoft Excel",
+            "Google Workspace",
+            "Python y Javascript",
+            "SQL",
+            "Excelente comunicación asertiva y adaptabilidad",
+            "Capacidad para trabajar de forma independiente y en equipo",
+            "Orientado al detalle y capaz de gestionar múltiples tareas simultáneamente",
+            "Orientado a encontrar soluciones efectivas para problemas tanto propios como de los clientes"
+        ],
+        "cursos_certificaciones": [
+            {
+                "nombre": "CS50 Introduction to Programming",
+                "institucion": "Harvard",
+                "fecha": "2024",
+                "descripcion": null
+            },
+            {
+                "nombre": "Certificado en Conceptos Claves para la Construcción de un Modelo de Negocio Sostenible",
+                "institucion": "INALDE",
+                "fecha": "2023",
+                "descripcion": null
+            },
+            {
+                "nombre": "Certificados en Aprendizaje Basado en Proyectos, Educación Ambiental y Docencia Virtual",
+                "institucion": "Politécnico de Colombia",
+                "fecha": "2021",
+                "descripcion": null
+            },
+            {
+                "nombre": "Diplomado Programming for Everybody",
+                "institucion": "University of Michigan, Coursera",
+                "fecha": "2019",
+                "descripcion": null
+            },
+            {
+                "nombre": "Proceso de Liderazgo",
+                "institucion": "LVC",
+                "fecha": "2011",
+                "descripcion": null
+            }
+        ],
+        "archivo": "CV Español.pdf",
+        "fecha_procesamiento": "2025-05-14 14:13:46"
+    }
+]
