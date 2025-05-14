@@ -48,7 +48,77 @@
         ],
         "cursos_certificaciones": [],
         "archivo": "CV Demo 1.pdf",
-        "fecha_procesamiento": "2025-05-14 14:13:46"
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 20,
+            "experiencia_relevante": {
+                "puntuacion": 60,
+                "explicacion": "El candidato tiene experiencia como Gerente en diferentes empresas, lo cual demuestra habilidades de liderazgo y toma de decisiones. Aunque no tiene experiencia específica en desarrollo web, su experiencia en gestión de equipos y proyectos podría ser relevante."
+            },
+            "habilidades_coincidentes": [
+                "Liderazgo",
+                "Comunicación"
+            ],
+            "habilidades_faltantes": [
+                "Desarrollo web",
+                "Python",
+                "JavaScript",
+                "Frameworks (React, Angular, Vue.js)",
+                "Bases de datos SQL y NoSQL",
+                "Metodologías ágiles",
+                "Servicios cloud (AWS, Azure, Google Cloud)",
+                "Git y CI/CD pipelines",
+                "API REST y GraphQL"
+            ],
+            "anos_experiencia": 0,
+            "nivel_idioma": null,
+            "fortalezas": [
+                "Experiencia en liderazgo",
+                "Habilidades de comunicación"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia en desarrollo web y tecnologías específicas requeridas",
+                "Necesidad de adquirir conocimientos en desarrollo de aplicaciones web y tecnologías mencionadas en la descripción del trabajo"
+            ],
+            "recomendacion": "Con reservas",
+            "justificacion": "Aunque el candidato tiene habilidades de liderazgo y comunicación, carece de la experiencia y conocimientos técnicos necesarios para el puesto de Desarrollador Full Stack. Se recomienda considerar su perfil para roles de gestión o liderazgo en proyectos de desarrollo de software, pero no para el puesto específico mencionado."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Industrias Ariova",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Rodríguez y familia",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Borcelle",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Ensigna",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 4,
+            "empresas_confirmadas": 0,
+            "confiabilidad_general": 0.0,
+            "mensaje": "Se verificaron 0 de 4 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 15:08:15"
     },
     {
         "nombre": "Alfredo Torres",
@@ -102,33 +172,97 @@
         ],
         "cursos_certificaciones": [],
         "archivo": "CV Demo 2.pdf",
-        "fecha_procesamiento": "2025-05-14 14:13:46"
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 20,
+            "experiencia_relevante": {
+                "puntuacion": 50,
+                "explicacion": "El candidato tiene experiencia como Gerente en empresas, lo cual demuestra habilidades de liderazgo y trabajo en equipo, pero no cuenta con experiencia específica en desarrollo web como se requiere para el puesto."
+            },
+            "habilidades_coincidentes": [
+                "Trabajo en equipo"
+            ],
+            "habilidades_faltantes": [
+                "Desarrollo web",
+                "Python",
+                "JavaScript",
+                "Frameworks como React, Angular o Vue.js",
+                "Bases de datos SQL y NoSQL",
+                "Metodologías ágiles",
+                "Servicios cloud",
+                "Git y CI/CD pipelines",
+                "API REST y GraphQL",
+                "Inglés intermedio o avanzado"
+            ],
+            "anos_experiencia": 0,
+            "nivel_idioma": null,
+            "fortalezas": [
+                "Experiencia en roles de liderazgo",
+                "Habilidades de comunicación",
+                "Capacidad de toma de decisiones"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia en desarrollo web",
+                "Necesidad de adquirir conocimientos técnicos específicos para el puesto"
+            ],
+            "recomendacion": "No recomendado",
+            "justificacion": "A pesar de tener habilidades de liderazgo y trabajo en equipo, el candidato no cumple con los requisitos específicos de experiencia y habilidades técnicas necesarias para el puesto de Desarrollador Full Stack. Se recomienda buscar candidatos con experiencia y conocimientos más alineados con el perfil solicitado."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Borcelle",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Ensigna",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 2,
+            "empresas_confirmadas": 0,
+            "confiabilidad_general": 0.0,
+            "mensaje": "Se verificaron 0 de 2 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 15:08:15"
     },
     {
         "nombre": "Christian Ramírez",
         "edad": null,
         "estudios": [
             {
-                "titulo": "Maestría en Bioingeniería - Grado Cum Laude y reconocimiento de excelencia académica",
+                "titulo": "Maestría en Bioingeniería",
                 "institucion": "Gimnasio Los Portales",
                 "ubicacion": null,
                 "periodo": "2021 - 2023",
-                "descripcion": "Profesor de biología para el área de bachillerato IB en inglés. Planeación y desarrollo de clases para MYP y DP. Dirección de evaluaciones internas y monografías. Manejo de grupos. Tutorías para colegio y universidad en química, física, matemáticas y biología."
+                "descripcion": "Grado Cum Laude y reconocimiento de excelencia académica"
             },
             {
-                "titulo": "Pregrado en Biología - Reconocimiento excelencia académica y mejores SaberPro Colombia",
+                "titulo": "Pregrado en Biología",
                 "institucion": "Outlier",
                 "ubicacion": null,
                 "periodo": "2015 - 2019",
-                "descripcion": "Independiente | Mayo 2019 - Presente. Preparación para pruebas específicas: IB, SAT, ICFES (Saber). Tutorías para colegio y universidad en química, física, matemáticas y biología. Desarrollo de clases en español e ingles. Acompañamiento en tareas y técnicas de estudio."
+                "descripcion": "Reconocimiento excelencia académica y mejores SaberPro Colombia"
             }
         ],
         "experiencia_previa": [
             {
-                "puesto": "Entrenador de Inteligencia Artificial",
-                "empresa": "Pontificia Universidad Javeriana",
+                "puesto": "Profesor de biología para el área de bachillerato IB en inglés",
+                "empresa": "Gimnasio Los Portales",
                 "ubicacion": null,
-                "periodo": "Presente",
+                "periodo": "Agosto 2024 - Presente",
+                "descripcion": "Planeación y desarrollo de clases para MYP y DP. Dirección de evaluaciones internas y monografías. Manejo de grupos. Tutorías para colegio y universidad en química, física, matemáticas y biología."
+            },
+            {
+                "puesto": "Entrenador de Inteligencia Artificial",
+                "empresa": "Outlier",
+                "ubicacion": null,
+                "periodo": "Mayo 2024 - Presente",
                 "descripcion": "Entrenamiento a modelos de lenguaje grandes (LLM) para la región de LATAM. Escritura de texto para el entrenamiento de modelos. Evaluación del resultado de búsqueda en modelos de IA."
             },
             {
@@ -158,22 +292,22 @@
                 "descripcion": null
             },
             {
-                "nombre": "Certificado en Conceptos Claves para la Construcción de un Modelo de Negocio Sostenible",
+                "nombre": "Conceptos Claves para la Construcción de un Modelo de Negocio Sostenible",
                 "institucion": "INALDE",
                 "fecha": "2023",
                 "descripcion": null
             },
             {
-                "nombre": "Certificados en Aprendizaje Basado en Proyectos, Educación Ambiental y Docencia Virtual",
+                "nombre": "Aprendizaje Basado en Proyectos, Educación Ambiental y Docencia Virtual",
                 "institucion": "Politécnico de Colombia",
                 "fecha": "2021",
                 "descripcion": null
             },
             {
-                "nombre": "Diplomado Programming for Everybody",
+                "nombre": "Programming for Everybody",
                 "institucion": "University of Michigan, Coursera",
                 "fecha": "2019",
-                "descripcion": null
+                "descripcion": "Diplomado"
             },
             {
                 "nombre": "Proceso de Liderazgo",
@@ -183,6 +317,67 @@
             }
         ],
         "archivo": "CV Español.pdf",
-        "fecha_procesamiento": "2025-05-14 14:13:46"
+        "evaluacion_compatibilidad": {
+            "compatibilidad_general": 65,
+            "experiencia_relevante": {
+                "puntuacion": 70,
+                "explicacion": "El candidato tiene experiencia en desarrollo web y programación, aunque no específicamente en Full Stack. Su experiencia como Entrenador de Inteligencia Artificial y Profesor de biología demuestra habilidades de enseñanza y trabajo en equipo que pueden ser transferibles."
+            },
+            "habilidades_coincidentes": [
+                "Python y Javascript",
+                "SQL",
+                "Capacidad de trabajar en equipo"
+            ],
+            "habilidades_faltantes": [
+                "Frameworks como React, Angular o Vue.js",
+                "Metodologías ágiles (Scrum, Kanban)",
+                "Familiaridad con servicios cloud (AWS, Azure o Google Cloud)",
+                "Git y CI/CD pipelines",
+                "API REST y GraphQL"
+            ],
+            "anos_experiencia": 0,
+            "nivel_idioma": "No mencionado",
+            "fortalezas": [
+                "Experiencia en programación y desarrollo web",
+                "Habilidades de comunicación y trabajo en equipo",
+                "Capacidad para gestionar múltiples tareas simultáneamente"
+            ],
+            "areas_mejora": [
+                "Falta de experiencia específica en Full Stack development",
+                "Necesidad de adquirir conocimientos en frameworks y metodologías específicas"
+            ],
+            "recomendacion": "Con reservas",
+            "justificacion": "El candidato posee habilidades y experiencia relevantes en programación y trabajo en equipo, lo cual es valioso para el puesto. Sin embargo, se requiere un mayor nivel de experiencia en Full Stack development y conocimientos específicos en frameworks y metodologías ágiles. Se recomienda considerar al candidato con reservas y evaluar su disposición para adquirir las habilidades faltantes."
+        },
+        "verificacion_empresas": {
+            "empresas_verificadas": [
+                {
+                    "nombre": "Gimnasio Los Portales",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                },
+                {
+                    "nombre": "Outlier",
+                    "verificada": true,
+                    "fuente": "Wikipedia",
+                    "descripcion": "In statistics, an outlier is a data point that differs significantly from other observations. An outlier may be due to a variability in the measurement, an indication of novel data, or it may be the r...",
+                    "confiabilidad": "Alta"
+                },
+                {
+                    "nombre": "ASSET Tutores",
+                    "verificada": false,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                }
+            ],
+            "total_empresas": 3,
+            "empresas_confirmadas": 1,
+            "confiabilidad_general": 33.33333333333333,
+            "mensaje": "Se verificaron 1 de 3 empresas"
+        },
+        "fecha_procesamiento": "2025-05-14 15:08:15"
     }
 ]

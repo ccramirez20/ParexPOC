@@ -6,6 +6,8 @@ import fitz  # PyMuPDF para trabajar con PDFs
 from typing import List, Dict, Optional, Any
 import logging
 from datetime import datetime
+import re
+import time
 
 # Configuración de logging para un mejor seguimiento de errores y procesos
 logging.basicConfig(
@@ -28,6 +30,28 @@ ARCHIVO_SALIDA = "informacion_cvs.json"
 # URL del servicio OCR
 OCR_URL = "https://api.ocr.space/parse/image"
 API_KEY = "K81778047988957"  # Clave de API para OCR.space
+
+# Descripción del trabajo para el POC
+DESCRIPCION_TRABAJO = """
+Buscamos un Desarrollador Full Stack con experiencia en:
+- Mínimo 3 años de experiencia en desarrollo web
+- Dominio de Python y JavaScript
+- Experiencia con frameworks como React, Angular o Vue.js
+- Conocimientos de bases de datos SQL y NoSQL
+- Experiencia con metodologías ágiles (Scrum, Kanban)
+- Familiaridad con servicios cloud (AWS, Azure o Google Cloud)
+- Git y CI/CD pipelines
+- API REST y GraphQL
+- Capacidad de trabajar en equipo
+- Inglés intermedio o avanzado
+
+Responsabilidades:
+- Desarrollar y mantener aplicaciones web
+- Colaborar con el equipo de diseño y producto
+- Escribir código limpio y documentado
+- Participar en code reviews
+- Resolver problemas técnicos complejos
+"""
 
 # Función para extraer texto de un PDF usando PyMuPDF (fitz)
 def extraer_texto_pdf(ruta_archivo: str) -> str:
@@ -167,6 +191,152 @@ def analizar_cv_con_llm(texto: str) -> Dict:
         logger.error(f"Error al procesar con Azure OpenAI: {str(e)}")
         return {"error": f"Error en la API de Azure OpenAI: {str(e)}"}
 
+# NUEVO: Función para evaluar la compatibilidad con la descripción de trabajo
+def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION_TRABAJO) -> Dict:
+    """
+    Evalúa qué tan bien se ajusta un candidato a la descripción del trabajo.
+    """
+    try:
+        # Preparamos el prompt para la evaluación
+        prompt = f"""
+        Analiza el siguiente perfil de candidato y evalúa su compatibilidad con la descripción del trabajo.
+        
+        Perfil del candidato:
+        {json.dumps(cv_info, indent=2, ensure_ascii=False)}
+        
+        Descripción del trabajo:
+        {descripcion_trabajo}
+        
+        Evalúa los siguientes aspectos y proporciona una respuesta en formato JSON:
+        1. compatibilidad_general: Puntuación del 0 al 100
+        2. experiencia_relevante: Puntuación del 0 al 100 y explicación
+        3. habilidades_coincidentes: Lista de habilidades que coinciden con los requisitos
+        4. habilidades_faltantes: Lista de habilidades requeridas que no se encontraron
+        5. anos_experiencia: Años de experiencia relevante detectados
+        6. nivel_idioma: Nivel de inglés si se menciona
+        7. fortalezas: Lista de puntos fuertes del candidato para el puesto
+        8. areas_mejora: Lista de áreas donde el candidato podría mejorar
+        9. recomendacion: "Altamente recomendado", "Recomendado", "Con reservas", "No recomendado"
+        10. justificacion: Explicación detallada de la evaluación
+        
+        Asegúrate de devolver un JSON válido.
+        """
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Eres un experto en recursos humanos evaluando candidatos."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+        )
+        
+        resultado_text = response.choices[0].message.content.strip()
+        
+        # Limpiamos la respuesta
+        if resultado_text.startswith("```json"):
+            resultado_text = resultado_text[7:]
+        if resultado_text.endswith("```"):
+            resultado_text = resultado_text[:-3]
+        
+        evaluacion = json.loads(resultado_text.strip())
+        logger.info(f"Evaluación de compatibilidad completada para {cv_info.get('nombre', 'candidato desconocido')}")
+        return evaluacion
+        
+    except Exception as e:
+        logger.error(f"Error al evaluar compatibilidad: {e}")
+        return {
+            "error": f"Error en la evaluación: {str(e)}",
+            "compatibilidad_general": 0,
+            "recomendacion": "No evaluado"
+        }
+
+# NUEVO: Función para verificar la existencia de las empresas
+def verificar_empresas(cv_info: Dict) -> Dict:
+    """
+    Verifica la existencia y reputación de las empresas mencionadas en el CV.
+    """
+    empresas_verificadas = []
+    
+    if not cv_info.get("experiencia_previa"):
+        return {"empresas_verificadas": [], "mensaje": "No se encontraron empresas para verificar"}
+    
+    for experiencia in cv_info.get("experiencia_previa", []):
+        empresa = experiencia.get("empresa", "")
+        if not empresa:
+            continue
+            
+        logger.info(f"Verificando empresa: {empresa}")
+        
+        try:
+            # Usando la API de Clearbit (versión gratuita) para obtener información de empresas
+            # Nota: Esta API tiene límites en su versión gratuita
+            # Como alternativa, también se puede usar Google Places API
+            
+            # Intentamos primero con una búsqueda simple en Wikipedia API (completamente gratis)
+            wiki_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{empresa.replace(' ', '_')}"
+            headers = {'User-Agent': 'CVParser/1.0'}
+            
+            wiki_response = requests.get(wiki_url, headers=headers, timeout=10)
+            
+            empresa_info = {
+                "nombre": empresa,
+                "verificada": False,
+                "fuente": "No verificada",
+                "descripcion": "No se encontró información",
+                "confiabilidad": "Baja"
+            }
+            
+            if wiki_response.status_code == 200:
+                wiki_data = wiki_response.json()
+                if wiki_data.get("type") == "standard":
+                    empresa_info.update({
+                        "verificada": True,
+                        "fuente": "Wikipedia",
+                        "descripcion": wiki_data.get("extract", "")[:200] + "...",
+                        "confiabilidad": "Alta"
+                    })
+            else:
+                # Como respaldo, intentamos con Google Search (usando SerpAPI versión gratuita)
+                # Nota: SerpAPI requiere API key, aquí usamos un enfoque simple
+                google_url = f"https://www.google.com/search?q={requests.utils.quote(empresa + ' company')}"
+                
+                # Para un POC, simplemente marcamos como "verificación pendiente"
+                empresa_info.update({
+                    "verificada": False,
+                    "fuente": "Búsqueda manual requerida",
+                    "descripcion": "Requiere verificación manual",
+                    "confiabilidad": "Pendiente"
+                })
+            
+            empresas_verificadas.append(empresa_info)
+            
+            # Pequeña pausa para evitar throttling
+            time.sleep(0.5)
+            
+        except Exception as e:
+            logger.error(f"Error al verificar empresa {empresa}: {e}")
+            empresas_verificadas.append({
+                "nombre": empresa,
+                "verificada": False,
+                "fuente": "Error",
+                "descripcion": f"Error al verificar: {str(e)}",
+                "confiabilidad": "Desconocida"
+            })
+    
+    # Calculamos un score de confiabilidad general
+    empresas_verificadas_count = sum(1 for e in empresas_verificadas if e["verificada"])
+    total_empresas = len(empresas_verificadas)
+    confiabilidad_general = (empresas_verificadas_count / total_empresas * 100) if total_empresas > 0 else 0
+    
+    return {
+        "empresas_verificadas": empresas_verificadas,
+        "total_empresas": total_empresas,
+        "empresas_confirmadas": empresas_verificadas_count,
+        "confiabilidad_general": confiabilidad_general,
+        "mensaje": f"Se verificaron {empresas_verificadas_count} de {total_empresas} empresas"
+    }
+
 # Función para analizar un documento completo
 def analizar_documento(ruta_archivo: str) -> Dict:
     """
@@ -190,8 +360,15 @@ def analizar_documento(ruta_archivo: str) -> Dict:
     # Agregamos el nombre del archivo al resultado
     resultado["archivo"] = os.path.basename(ruta_archivo)
     
-    # Si queremos guardar el texto original para referencia
-    # resultado["texto_original"] = texto
+    # Evaluamos la compatibilidad con el trabajo
+    if "error" not in resultado:
+        logger.info("Evaluando compatibilidad del candidato...")
+        evaluacion = evaluar_compatibilidad(resultado)
+        resultado["evaluacion_compatibilidad"] = evaluacion
+        
+        logger.info("Verificando empresas del candidato...")
+        verificacion_empresas = verificar_empresas(resultado)
+        resultado["verificacion_empresas"] = verificacion_empresas
     
     return resultado
 
@@ -231,6 +408,56 @@ def guardar_json(data: List[Dict], archivo_salida: str):
     except Exception as e:
         logger.error(f"Error al guardar el archivo JSON: {e}")
         return False
+
+# Función para generar un resumen ejecutivo
+def generar_resumen_ejecutivo(resultados: List[Dict]) -> str:
+    """
+    Genera un resumen ejecutivo de todos los candidatos procesados.
+    """
+    resumen = "=== RESUMEN EJECUTIVO DE CANDIDATOS ===\n\n"
+    candidatos_recomendados = []
+    candidatos_con_reservas = []
+    candidatos_no_recomendados = []
+    
+    for resultado in resultados:
+        if "error" in resultado:
+            continue
+            
+        nombre = resultado.get("nombre", "Desconocido")
+        evaluacion = resultado.get("evaluacion_compatibilidad", {})
+        recomendacion = evaluacion.get("recomendacion", "No evaluado")
+        puntuacion = evaluacion.get("compatibilidad_general", 0)
+        
+        candidato_resumen = {
+            "nombre": nombre,
+            "puntuacion": puntuacion,
+            "recomendacion": recomendacion,
+            "justificacion": evaluacion.get("justificacion", "Sin evaluación")
+        }
+        
+        if recomendacion == "Altamente recomendado":
+            candidatos_recomendados.append(candidato_resumen)
+        elif recomendacion in ["Recomendado", "Con reservas"]:
+            candidatos_con_reservas.append(candidato_resumen)
+        else:
+            candidatos_no_recomendados.append(candidato_resumen)
+    
+    # Ordenar por puntuación
+    candidatos_recomendados.sort(key=lambda x: x["puntuacion"], reverse=True)
+    candidatos_con_reservas.sort(key=lambda x: x["puntuacion"], reverse=True)
+    
+    resumen += f"Total de CVs procesados: {len(resultados)}\n"
+    resumen += f"Candidatos altamente recomendados: {len(candidatos_recomendados)}\n"
+    resumen += f"Candidatos con reservas: {len(candidatos_con_reservas)}\n"
+    resumen += f"Candidatos no recomendados: {len(candidatos_no_recomendados)}\n\n"
+    
+    if candidatos_recomendados:
+        resumen += "CANDIDATOS ALTAMENTE RECOMENDADOS:\n"
+        for candidato in candidatos_recomendados:
+            resumen += f"- {candidato['nombre']} (Puntuación: {candidato['puntuacion']}%)\n"
+            resumen += f"  {candidato['justificacion']}\n\n"
+    
+    return resumen
 
 # Función para validar y enriquecer los resultados
 def validar_y_enriquecer_resultados(resultados: List[Dict]) -> List[Dict]:
@@ -301,8 +528,17 @@ def main():
     # Guardamos los resultados
     exito = guardar_json(resultados_finales, ARCHIVO_SALIDA)
     
+    # Generamos un resumen ejecutivo
+    resumen = generar_resumen_ejecutivo(resultados_finales)
+    
+    # Guardamos el resumen en un archivo separado
+    with open("resumen_ejecutivo.txt", "w", encoding="utf-8") as f:
+        f.write(resumen)
+    
     if exito:
         logger.info(f"Proceso completado exitosamente. Se procesaron {len(resultados_finales)} documentos.")
+        logger.info("Resumen ejecutivo guardado en 'resumen_ejecutivo.txt'")
+        print("\n" + resumen)
     else:
         logger.error("Error al guardar los resultados.")
     
