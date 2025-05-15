@@ -307,3 +307,29 @@ pip install python-multipart
 2025-05-14 16:54:43,275 - INFO - Verificando empresa: Pontificia Universidad Javeriana
 2025-05-14 16:54:44,099 - INFO - Verificando empresa: ASSET Tutores
 2025-05-14 16:54:44,842 - INFO - Procesamiento por lotes batch_1747259648 completado exitosamente
+2025-05-15 11:45:34,506 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-15 11:45:34,545 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-15 11:47:35,386 - ERROR - Error en el proceso OCR para C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf: HTTPSConnectionPool(host='api.ocr.space', port=443): Read timed out. (read timeout=120)
+2025-05-15 11:47:35,386 - WARNING - No se pudo extraer texto de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-15 11:47:35,386 - INFO - Análisis cv_1747327534_CV_Demo_2.pdf completado exitosamente
+2025-05-15 11:49:15,899 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-15 11:49:15,909 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-15 11:49:36,950 - ERROR - Error en el proceso OCR para C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf: HTTPSConnectionPool(host='api.ocr.space', port=443): Max retries exceeded with url: /parse/image (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x000002719E4C1850>, 'Connection to api.ocr.space timed out. (connect timeout=120)'))
+2025-05-15 11:49:36,950 - WARNING - No se pudo extraer texto de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-15 11:49:36,950 - INFO - Análisis cv_1747327755_CV_Demo_2.pdf completado exitosamente
+2025-05-15 11:50:52,452 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-15 11:50:52,454 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-15 11:52:53,282 - ERROR - Error en el proceso OCR para C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf: HTTPSConnectionPool(host='api.ocr.space', port=443): Read timed out. (read timeout=120)
+2025-05-15 11:52:53,282 - WARNING - No se pudo extraer texto de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 1.pdf
+2025-05-15 11:52:53,282 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf
+2025-05-15 11:52:53,282 - INFO - El archivo C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Demo 2.pdf parece ser una imagen o PDF escaneado. Usando OCR.
+2025-05-15 11:54:32,837 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 11:54:32,859 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 11:54:41,252 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-15 11:54:41,252 - INFO - Evaluando compatibilidad del candidato...
+2025-05-15 11:54:46,760 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-15 11:54:46,760 - INFO - Verificando empresas del candidato...
+2025-05-15 11:54:46,760 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-15 11:54:47,623 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-15 11:54:48,364 - INFO - Verificando empresa: ASSET Tutores
+2025-05-15 11:54:49,248 - INFO - Análisis cv_1747328072_CV_Español.pdf completado exitosamente

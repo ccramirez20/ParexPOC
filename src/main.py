@@ -3,13 +3,13 @@ import json
 import requests
 import openai
 import fitz  # PyMuPDF para trabajar con PDFs
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 import logging
 from datetime import datetime
 import re
 import time
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, Form, Request, BackgroundTasks
+from fastapi import FastAPI, UploadFile, File, Form, Request, BackgroundTasks, HTTPException
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -46,8 +46,8 @@ for dir_path in [STATIC_DIR, TEMPLATES_DIR, UPLOAD_DIR, RESULTS_DIR]:
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-# Configuración de la API de Azure OpenAI
-openai.api_key = "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"  # Reemplaza con tu clave real
+# Configuración de la API de OpenAI
+openai.api_key = "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"
 
 # URL del servicio OCR
 OCR_URL = "https://api.ocr.space/parse/image"
@@ -90,8 +90,30 @@ class AnalysisStatus(BaseModel):
     progress: int
     message: str
 
+class AnalysisInput(BaseModel):
+    cv_id: str
+    content: str  # resumen o análisis del CV
+
+class ChatRequest(BaseModel):
+    message: str
+
+class ChatInput(BaseModel):
+    cv_id: str
+    message: str
+
+class ChatMessage(BaseModel):
+    role: str  # "user" o "assistant"
+    content: str
+
+class ChatHistoryResponse(BaseModel):
+    history: List[ChatMessage]
+
 # Estado global para seguimiento de tareas en background
 analysis_tasks = {}
+
+# Memoria en memoria
+cv_analyses = {}  # id_cv -> análisis
+chat_histories = {}  # id_cv -> historial (lista de mensajes)
 
 # Función para extraer texto de un PDF usando PyMuPDF (fitz)
 def extraer_texto_pdf(ruta_archivo: str) -> str:
@@ -151,10 +173,10 @@ def extraer_texto(ruta_archivo: str) -> str:
         logger.info(f"El archivo {ruta_archivo} parece ser una imagen o PDF escaneado. Usando OCR.")
         return extraer_texto_ocr(ruta_archivo)
 
-# Función para interactuar con Azure OpenAI y extraer información estructurada
+# Función para interactuar con OpenAI y extraer información estructurada
 def analizar_cv_con_llm(texto: str) -> Dict:
     """
-    Envía el texto del CV a Azure OpenAI y obtiene información estructurada.
+    Envía el texto del CV a OpenAI y obtiene información estructurada.
     """
     if not texto or len(texto) < 50:
         logger.warning("El texto proporcionado es demasiado corto para un análisis efectivo")
@@ -198,7 +220,7 @@ def analizar_cv_con_llm(texto: str) -> Dict:
         
         # Realizamos la llamada a la API
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  # O el despliegue que estés utilizando
+            model="gpt-3.5-turbo",  # O el modelo que estés utilizando
             messages=[
                 {"role": "system", "content": "Eres un asistente especializado en extraer información estructurada de currículums vitae."},
                 {"role": "user", "content": prompt}
@@ -225,11 +247,20 @@ def analizar_cv_con_llm(texto: str) -> Dict:
         except json.JSONDecodeError as e:
             logger.error(f"Error al decodificar JSON de la respuesta LLM: {e}")
             logger.error(f"Texto recibido: {resultado_text[:200]}...")
-            return {"error": "Formato JSON inválido en la respuesta", "texto_parcial": resultado_text[:500]}
+            
+            # Intentar una limpieza más agresiva y reintento
+            try:
+                # Eliminar cualquier carácter no ASCII
+                clean_text = re.sub(r'[^\x00-\x7F]+', '', resultado_text)
+                resultado = json.loads(clean_text)
+                logger.info("Análisis del CV completado tras limpieza de texto")
+                return resultado
+            except:
+                return {"error": "Formato JSON inválido en la respuesta", "texto_parcial": resultado_text[:500]}
             
     except Exception as e:
-        logger.error(f"Error al procesar con Azure OpenAI: {str(e)}")
-        return {"error": f"Error en la API de Azure OpenAI: {str(e)}"}
+        logger.error(f"Error al procesar con OpenAI: {str(e)}")
+        return {"error": f"Error en la API de OpenAI: {str(e)}"}
 
 # Función para evaluar la compatibilidad con la descripción de trabajo
 def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION_TRABAJO) -> Dict:
@@ -237,6 +268,14 @@ def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION
     Evalúa qué tan bien se ajusta un candidato a la descripción del trabajo.
     """
     try:
+        # Verificamos si el CV tiene información suficiente
+        if "error" in cv_info or not cv_info.get("nombre"):
+            return {
+                "compatibilidad_general": 0,
+                "recomendacion": "No evaluado",
+                "justificacion": "Información insuficiente en el CV"
+            }
+            
         # Preparamos el prompt para la evaluación
         prompt = f"""
         Analiza el siguiente perfil de candidato y evalúa su compatibilidad con la descripción del trabajo.
@@ -279,9 +318,18 @@ def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION
         if resultado_text.endswith("```"):
             resultado_text = resultado_text[:-3]
         
-        evaluacion = json.loads(resultado_text.strip())
-        logger.info(f"Evaluación de compatibilidad completada para {cv_info.get('nombre', 'candidato desconocido')}")
-        return evaluacion
+        try:
+            evaluacion = json.loads(resultado_text.strip())
+            logger.info(f"Evaluación de compatibilidad completada para {cv_info.get('nombre', 'candidato desconocido')}")
+            return evaluacion
+        except json.JSONDecodeError as e:
+            logger.error(f"Error al decodificar JSON de evaluación: {e}")
+            # Devolvemos un diccionario básico en caso de error
+            return {
+                "compatibilidad_general": 50,
+                "recomendacion": "No evaluado completamente",
+                "justificacion": "Error al procesar la evaluación. Se requiere revisión manual."
+            }
         
     except Exception as e:
         logger.error(f"Error al evaluar compatibilidad: {e}")
@@ -291,7 +339,7 @@ def evaluar_compatibilidad(cv_info: Dict, descripcion_trabajo: str = DESCRIPCION
             "recomendacion": "No evaluado"
         }
 
-# Función para verificar la existencia de las empresas
+# Función para verificar la existencia de las empresas con manejo de errores mejorado
 def verificar_empresas(cv_info: Dict) -> Dict:
     """
     Verifica la existencia y reputación de las empresas mencionadas en el CV.
@@ -309,15 +357,17 @@ def verificar_empresas(cv_info: Dict) -> Dict:
         logger.info(f"Verificando empresa: {empresa}")
         
         try:
-            # Usando la API de Clearbit (versión gratuita) para obtener información de empresas
-            # Nota: Esta API tiene límites en su versión gratuita
-            # Como alternativa, también se puede usar Google Places API
-            
-            # Intentamos primero con una búsqueda simple en Wikipedia API (completamente gratis)
-            wiki_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{empresa.replace(' ', '_')}"
+            # Usando la Wikipedia API para verificación básica
+            empresa_normalizada = empresa.replace(' ', '_')
+            wiki_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{empresa_normalizada}"
             headers = {'User-Agent': 'CVParser/1.0'}
             
-            wiki_response = requests.get(wiki_url, headers=headers, timeout=10)
+            try:
+                wiki_response = requests.get(wiki_url, headers=headers, timeout=10)
+                wiki_data = wiki_response.json() if wiki_response.status_code == 200 else {}
+            except (requests.RequestException, json.JSONDecodeError) as e:
+                logger.warning(f"Error al consultar Wikipedia para {empresa}: {e}")
+                wiki_data = {}
             
             empresa_info = {
                 "nombre": empresa,
@@ -327,21 +377,15 @@ def verificar_empresas(cv_info: Dict) -> Dict:
                 "confiabilidad": "Baja"
             }
             
-            if wiki_response.status_code == 200:
-                wiki_data = wiki_response.json()
-                if wiki_data.get("type") == "standard":
-                    empresa_info.update({
-                        "verificada": True,
-                        "fuente": "Wikipedia",
-                        "descripcion": wiki_data.get("extract", "")[:200] + "...",
-                        "confiabilidad": "Alta"
-                    })
+            if wiki_data.get("type") == "standard":
+                empresa_info.update({
+                    "verificada": True,
+                    "fuente": "Wikipedia",
+                    "descripcion": wiki_data.get("extract", "")[:200] + "...",
+                    "confiabilidad": "Alta"
+                })
             else:
-                # Como respaldo, intentamos con Google Search (usando SerpAPI versión gratuita)
-                # Nota: SerpAPI requiere API key, aquí usamos un enfoque simple
-                google_url = f"https://www.google.com/search?q={requests.utils.quote(empresa + ' company')}"
-                
-                # Para un POC, simplemente marcamos como "verificación pendiente"
+                # Como respaldo, marcamos como "verificación pendiente"
                 empresa_info.update({
                     "verificada": False,
                     "fuente": "Búsqueda manual requerida",
@@ -377,40 +421,48 @@ def verificar_empresas(cv_info: Dict) -> Dict:
         "mensaje": f"Se verificaron {empresas_verificadas_count} de {total_empresas} empresas"
     }
 
-# Función para analizar un documento completo
+# Función para analizar un documento completo con manejo de errores mejorado
 def analizar_documento(ruta_archivo: str, descripcion_trabajo: str = DESCRIPCION_TRABAJO) -> Dict:
     """
     Proceso completo de análisis de un CV: extracción de texto y análisis estructurado.
     """
     logger.info(f"Iniciando análisis del documento: {ruta_archivo}")
     
-    # Extraemos el texto del documento (PDF o imagen)
-    texto = extraer_texto(ruta_archivo)
-    
-    if not texto:
-        logger.warning(f"No se pudo extraer texto de {ruta_archivo}")
-        return {
-            "archivo": os.path.basename(ruta_archivo),
-            "error": "No se pudo extraer texto del documento"
-        }
-    
-    # Analizamos el texto con el LLM para extraer información estructurada
-    resultado = analizar_cv_con_llm(texto)
-    
-    # Agregamos el nombre del archivo al resultado
-    resultado["archivo"] = os.path.basename(ruta_archivo)
-    
-    # Evaluamos la compatibilidad con el trabajo
-    if "error" not in resultado:
-        logger.info("Evaluando compatibilidad del candidato...")
-        evaluacion = evaluar_compatibilidad(resultado, descripcion_trabajo)
-        resultado["evaluacion_compatibilidad"] = evaluacion
+    try:
+        # Extraemos el texto del documento (PDF o imagen)
+        texto = extraer_texto(ruta_archivo)
         
-        logger.info("Verificando empresas del candidato...")
-        verificacion_empresas = verificar_empresas(resultado)
-        resultado["verificacion_empresas"] = verificacion_empresas
-    
-    return resultado
+        if not texto:
+            logger.warning(f"No se pudo extraer texto de {ruta_archivo}")
+            return {
+                "archivo": os.path.basename(ruta_archivo),
+                "error": "No se pudo extraer texto del documento"
+            }
+        
+        # Analizamos el texto con el LLM para extraer información estructurada
+        resultado = analizar_cv_con_llm(texto)
+        
+        # Agregamos el nombre del archivo al resultado
+        resultado["archivo"] = os.path.basename(ruta_archivo)
+        
+        # Evaluamos la compatibilidad con el trabajo solo si no hay errores
+        if "error" not in resultado:
+            logger.info("Evaluando compatibilidad del candidato...")
+            evaluacion = evaluar_compatibilidad(resultado, descripcion_trabajo)
+            resultado["evaluacion_compatibilidad"] = evaluacion
+            
+            logger.info("Verificando empresas del candidato...")
+            verificacion_empresas = verificar_empresas(resultado)
+            resultado["verificacion_empresas"] = verificacion_empresas
+        
+        return resultado
+        
+    except Exception as e:
+        logger.error(f"Error general en análisis de documento: {e}")
+        return {
+            "archivo": os.path.basename(ruta_archivo) if ruta_archivo else "desconocido",
+            "error": f"Error en el análisis: {str(e)}"
+        }
 
 # Función para generar un resumen ejecutivo
 def generar_resumen_ejecutivo(resultados: List[Dict]) -> str:
@@ -421,9 +473,15 @@ def generar_resumen_ejecutivo(resultados: List[Dict]) -> str:
     candidatos_recomendados = []
     candidatos_con_reservas = []
     candidatos_no_recomendados = []
+    candidatos_con_error = []
     
     for resultado in resultados:
         if "error" in resultado:
+            candidatos_con_error.append({
+                "nombre": resultado.get("nombre", "Desconocido"),
+                "archivo": resultado.get("archivo", ""),
+                "error": resultado.get("error", "Error no especificado")
+            })
             continue
             
         nombre = resultado.get("nombre", "Desconocido")
@@ -452,13 +510,26 @@ def generar_resumen_ejecutivo(resultados: List[Dict]) -> str:
     resumen += f"Total de CVs procesados: {len(resultados)}\n"
     resumen += f"Candidatos altamente recomendados: {len(candidatos_recomendados)}\n"
     resumen += f"Candidatos con reservas: {len(candidatos_con_reservas)}\n"
-    resumen += f"Candidatos no recomendados: {len(candidatos_no_recomendados)}\n\n"
+    resumen += f"Candidatos no recomendados: {len(candidatos_no_recomendados)}\n"
+    resumen += f"CVs con errores: {len(candidatos_con_error)}\n\n"
     
     if candidatos_recomendados:
         resumen += "CANDIDATOS ALTAMENTE RECOMENDADOS:\n"
         for candidato in candidatos_recomendados:
             resumen += f"- {candidato['nombre']} (Puntuación: {candidato['puntuacion']}%)\n"
             resumen += f"  {candidato['justificacion']}\n\n"
+    
+    if candidatos_con_reservas:
+        resumen += "CANDIDATOS CON RESERVAS:\n"
+        for candidato in candidatos_con_reservas:
+            resumen += f"- {candidato['nombre']} (Puntuación: {candidato['puntuacion']}%)\n"
+            resumen += f"  {candidato['justificacion']}\n\n"
+    
+    if candidatos_con_error:
+        resumen += "CVs CON ERRORES DE PROCESAMIENTO:\n"
+        for candidato in candidatos_con_error:
+            resumen += f"- Archivo: {candidato['archivo']}\n"
+            resumen += f"  Error: {candidato['error']}\n\n"
     
     return resumen
 
@@ -508,7 +579,7 @@ def validar_y_enriquecer_resultados(resultados: List[Dict]) -> List[Dict]:
     
     return resultados_validados
 
-# Función para procesar un CV en background
+# Función para procesar un CV en background con mejor manejo de errores
 async def procesar_cv_background(file_path: str, analysis_id: str, job_description: str = DESCRIPCION_TRABAJO):
     """
     Procesa un CV en segundo plano y actualiza el estado del análisis.
@@ -521,7 +592,13 @@ async def procesar_cv_background(file_path: str, analysis_id: str, job_descripti
             "message": "Extrayendo texto del CV..."
         }
         
+        # Verificar que el archivo existe
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"El archivo {file_path} no existe")
+        
         # Analizar el documento
+        analysis_tasks[analysis_id]["progress"] = 30
+        analysis_tasks[analysis_id]["message"] = "Analizando contenido del CV..."
         resultado = analizar_documento(file_path, job_description)
         
         # Actualizar progreso
@@ -532,6 +609,9 @@ async def procesar_cv_background(file_path: str, analysis_id: str, job_descripti
         resultado_validado = validar_y_enriquecer_resultados([resultado])[0]
         
         # Guardar el resultado en un archivo JSON
+        analysis_tasks[analysis_id]["progress"] = 80
+        analysis_tasks[analysis_id]["message"] = "Guardando resultados..."
+        
         result_file = RESULTS_DIR / f"{analysis_id}.json"
         with open(result_file, "w", encoding="utf-8") as f:
             json.dump(resultado_validado, f, indent=4, ensure_ascii=False)
@@ -624,6 +704,41 @@ async def procesar_cvs_batch_background(file_paths: List[str], batch_id: str, jo
             "progress": 100,
             "message": f"Error: {str(e)}"
         }
+
+# Guardar análisis
+@app.post("/analysis/")
+def save_analysis(data: AnalysisInput):
+    cv_analyses[data.cv_id] = data.content
+    chat_histories[data.cv_id] = [
+        {"role": "system", "content": f"Eres un asistente de RRHH. Este es el análisis del CV del candidato: {data.content}"}
+    ]
+    return {"status": "análisis guardado"}
+
+# Enviar mensaje al chat
+@app.post("/chat/", response_model=ChatMessage)
+def chat_with_cv_context(data: ChatInput):
+    if data.cv_id not in chat_histories:
+        raise HTTPException(status_code=404, detail="CV no encontrado o sin análisis")
+
+    chat_histories[data.cv_id].append({"role": "user", "content": data.message})
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=chat_histories[data.cv_id]
+    )
+
+    reply = response["choices"][0]["message"]
+    chat_histories[data.cv_id].append(reply)
+
+    return reply
+
+# Ver historial del chat
+@app.get("/chat/{cv_id}/history", response_model=ChatHistoryResponse)
+def get_chat_history(cv_id: str):
+    if cv_id not in chat_histories:
+        raise HTTPException(status_code=404, detail="CV no encontrado")
+
+    return {"history": chat_histories[cv_id]}
 
 # Rutas de la API FastAPI
 @app.get("/", response_class=HTMLResponse)

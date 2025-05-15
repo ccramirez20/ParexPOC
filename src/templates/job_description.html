@@ -3,72 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descripción del Trabajo</title>
-    <link rel="stylesheet" href="/static/style.css"> </head>
+    <title>Editar Descripción</title>
+    <style>
+        :root {
+            --primary: #480E2A;
+            --secondary: #E3E2DA;
+            --accent: #260717;
+            --white: #FFFFFF;
+        }
+
+        body {
+            background: var(--secondary);
+            color: var(--primary);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .editor-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 500px;
+            padding: 1rem;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            margin: 1rem 0;
+            resize: vertical;
+        }
+
+        button {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <img src="/static/indra-logo.png" alt="Indra Logo" class="logo-icon" style="height: 40px;">
-                <span>CVMatcher</span>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Inicio</a></li>
-                    <li><a href="/job-description">Descripción del Trabajo</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <div class="nav">
+        <a href="/">← Volver al análisis</a>
+    </div>
 
-    <main class="main-content">
-        <div class="container">
-            <div class="card">
-                <h2 class="card-title">Descripción del Trabajo</h2>
-                <form id="job-description-form">
-                    <div class="form-group">
-                        <label for="job-description">Edita la Descripción del Trabajo:</label>
-                        <textarea id="job-description" name="description" class="form-control" rows="10">
-                            {{ descripcion_trabajo }}
-                        </textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </form>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>© 2024 Minsait - CVMatcher - Análisis Inteligente de Currículums</p>
-        </div>
-    </footer>
+    <div class="editor-container">
+        <h1>Descripción del Puesto</h1>
+        <textarea id="jobDescription">{{ descripcion_trabajo }}</textarea>
+        <button onclick="guardarDescripcion()">Guardar Cambios</button>
+    </div>
 
     <script>
-        document.getElementById('job-description-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const description = document.getElementById('job-description').value;
-
+        async function guardarDescripcion() {
+            const descripcion = document.getElementById('jobDescription').value;
             try {
                 const response = await fetch('/api/update-job-description', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ description: description })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ description: descripcion })
                 });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.message);
-                } else {
-                    alert('Error al actualizar la descripción');
-                }
+                
+                if (!response.ok) throw new Error('Error al guardar');
+                alert('Descripción actualizada correctamente');
             } catch (error) {
-                console.error('Error:', error);
-                alert('Error al enviar la solicitud');
+                alert(error.message);
             }
-        });
+        }
     </script>
 </body>
 </html>

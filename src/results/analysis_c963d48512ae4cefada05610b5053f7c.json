@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "archivo": "cv_77b68933556a4410b3793eb9b28ccb55_CV Español.pdf",
+    "fecha_procesamiento": "2025-05-15T14:17:56.824464"
+  },
+  "datos_personales": {},
+  "educacion": [],
+  "experiencia": [],
+  "habilidades": {},
+  "compatibilidad": {
+    "compatibilidad_general": 20,
+    "puntos_fuertes": [
+      "Experiencia en Python y JavaScript",
+      "Certificaciones en educación y liderazgo"
+    ],
+    "puntos_debiles": [
+      "Falta de experiencia en desarrollo web",
+      "Falta de experiencia en frameworks frontend y backend",
+      "Falta de experiencia en bases de datos SQL y NoSQL",
+      "Falta de experiencia en sistemas cloud, Docker y Kubernetes",
+      "Falta de experiencia en Git y CI/CD pipelines",
+      "Falta de experiencia en diseño e implementación de APIs REST/GraphQL"
+    ],
+    "experiencia_relevante": {
+      "años_experiencia": 0,
+      "proyectos_relevantes": []
+    },
+    "habilidades_coincidentes": [
+      "Python",
+      "Javascript"
+    ],
+    "habilidades_faltantes": [
+      "Frameworks frontend (React, Angular o Vue.js)",
+      "Frameworks backend (Node.js y Django/Flask)",
+      "Bases de datos SQL y NoSQL",
+      "Sistemas cloud (AWS, Azure o Google Cloud)",
+      "Docker y Kubernetes",
+      "Git y CI/CD pipelines",
+      "Diseño e implementación de APIs REST/GraphQL"
+    ],
+    "recomendacion": "No Recomendado",
+    "explicacion_detallada": "El candidato tiene algunas habilidades técnicas relevantes como Python y JavaScript, pero carece de experiencia en desarrollo web, frameworks frontend y backend, bases de datos, sistemas cloud, Docker, Git, CI/CD pipelines y diseño de APIs. Su trayectoria profesional no se alinea con los requisitos del puesto, por lo que no se recomienda su contratación para el puesto de Desarrollador Full Stack."
+  },
+  "empresas_verificadas": []
+}
