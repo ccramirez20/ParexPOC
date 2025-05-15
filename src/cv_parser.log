@@ -333,3 +333,23 @@ pip install python-multipart
 2025-05-15 11:54:47,623 - INFO - Verificando empresa: Pontificia Universidad Javeriana
 2025-05-15 11:54:48,364 - INFO - Verificando empresa: ASSET Tutores
 2025-05-15 11:54:49,248 - INFO - Análisis cv_1747328072_CV_Español.pdf completado exitosamente
+2025-05-15 15:34:14,835 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 15:34:14,853 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 15:34:26,458 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-15 15:34:26,458 - INFO - Evaluando compatibilidad del candidato...
+2025-05-15 15:34:30,468 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-15 15:34:30,468 - INFO - Verificando empresas del candidato...
+2025-05-15 15:34:30,475 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-15 15:34:31,366 - INFO - Verificando empresa: Outlier
+2025-05-15 15:34:32,109 - INFO - Verificando empresa: ASSET Tutores
+2025-05-15 15:34:33,015 - INFO - Análisis cv_1747341254_CV_Español.pdf completado exitosamente
+2025-05-15 15:38:44,429 - INFO - Iniciando análisis del documento: C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 15:38:44,442 - INFO - Texto extraído correctamente de C:\Users\ccram\OneDrive\Documents\INDRA\POC_PAREX\IA_0001_POCPAREX_PAREX_DEV_01\src\uploads\CV Español.pdf
+2025-05-15 15:38:52,128 - INFO - Análisis del CV completado correctamente con LLM
+2025-05-15 15:38:52,128 - INFO - Evaluando compatibilidad del candidato...
+2025-05-15 15:38:55,652 - INFO - Evaluación de compatibilidad completada para CHRISTIAN RAMÍREZ
+2025-05-15 15:38:55,652 - INFO - Verificando empresas del candidato...
+2025-05-15 15:38:55,652 - INFO - Verificando empresa: Gimnasio Los Portales
+2025-05-15 15:38:56,401 - INFO - Verificando empresa: Pontificia Universidad Javeriana
+2025-05-15 15:38:57,143 - INFO - Verificando empresa: ASSET Tutores
+2025-05-15 15:38:57,886 - INFO - Análisis cv_1747341524_CV_Español.pdf completado exitosamente

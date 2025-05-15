@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV Analyzer Pro</title>
+    <title>CV Analyzer</title>
     <style>
         :root {
             --primary: #480E2A;
@@ -14,269 +15,861 @@
             --light-gray: #f8f9fa;
         }
 
-        body {
-            background: var(--secondary);
-            color: var(--primary);
-            font-family: 'Arial', sans-serif;
+        /* Estilos generales */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: #333;
+            line-height: 1.6;
         }
 
         .container {
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 15px;
         }
 
-        .nav {
-            text-align: center;
-            margin-bottom: 2rem;
+        /* Cabecera */
+        header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .nav a {
-            color: var(--primary);
-            text-decoration: none;
-            margin: 0 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s;
-        }
-
-        .nav a:hover {
-            background: var(--light-gray);
-        }
-
-        .tabs {
+        .header-content {
             display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            margin-right: 15px;
+        }
+
+        .logo {
+            border-radius: 50%;
+            background-color: var(--secondary);
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: rotate(15deg);
+        }
+
+        header h1 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 2.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Secciones comunes */
+        section {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        }
+
+        section h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            font-weight: 600;
+        }
+
+        /* Botones */
+        button {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Formulario de carga */
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .file-input-group {
+            background: var(--secondary);
+            border-radius: 6px;
+            padding: 1.2rem;
             margin-bottom: 1rem;
         }
 
-        .tab {
-            padding: 1rem 2rem;
-            cursor: pointer;
-            background: var(--light-gray);
-            border-radius: 5px 5px 0 0;
-            margin-right: 0.5rem;
+        .file-input-group h3 {
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
         }
 
-        .tab.active {
+        .file-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .file-input-button {
             background: var(--primary);
             color: var(--white);
+            padding: 0.7rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 10px;
         }
 
-        .upload-section {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .file-drop {
-            border: 2px dashed var(--primary);
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            margin: 1rem 0;
-        }
-
-        .preview-list {
-            margin: 1rem 0;
-        }
-
-        .preview-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem;
-            background: var(--light-gray);
-            margin: 0.25rem 0;
-            border-radius: 5px;
-        }
-
-        .progress-bar {
-            height: 20px;
-            background: var(--light-gray);
-            border-radius: 10px;
+        .file-name {
+            color: var(--gray);
+            font-size: 0.9rem;
+            white-space: nowrap;
             overflow: hidden;
-            margin: 1rem 0;
+            text-overflow: ellipsis;
+            max-width: 200px;
         }
 
-        .progress {
+        .action-button {
+            background: var(--accent);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* Resultados */
+        .cv-result {
+            background: var(--secondary);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .cv-result:hover {
+            transform: translateY(-3px);
+        }
+
+        .cv-result h3, .cv-result h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .compatibility-bar {
+            height: 12px;
+            background: #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 0.8rem 0;
+        }
+
+        .compatibility-fill {
             height: 100%;
+            background: linear-gradient(90deg, #ff7676 0%, #f0c07a 50%, #74d99f 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .view-details-btn {
             background: var(--primary);
-            transition: width 0.3s;
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-top: 0.8rem;
+            display: inline-block;
+        }
+
+        /* Chat */
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            background: var(--light-gray);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .message {
+            padding: 0.8rem 1rem;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background: var(--primary);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .assistant-message {
+            background: var(--secondary);
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #chat-input:focus {
+            border-color: var(--primary);
+        }
+
+        #chat-send {
+            padding: 0.8rem 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* Descripción del trabajo */
+        #job-description-text {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--secondary);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+            min-height: 150px;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        #job-description-text:focus {
+            border-color: var(--primary);
+        }
+
+        /* Loader */
+        .loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .loader {
+            border: 4px solid var(--secondary);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .chat-input-container {
+                flex-direction: column;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        /* Toast notifications */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #toast.show {
+            opacity: 1;
+        }
+
+        /* App Description */
+        #app-description {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem auto;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .description-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .description-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .description-text h2 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            border-bottom: none;
+            text-align: left;
+        }
+
+        .description-text p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .description-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .description-text h2 {
+                text-align: center;
+            }
+        }
+
+        /* Footer */
+        #main-footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-bottom {
+            font-size: 0.9rem;
         }
     </style>
 </head>
+
 <body>
-    <div class="nav">
-        <a href="/">Análisis</a>
-        <a href="/job-description">Descripción</a>
-    </div>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="/api/placeholder/50/50" alt="Logo" class="logo">
+                </div>
+                <h1>CV Analyzer</h1>
+            </div>
+        </div>
+    </header>
 
     <div class="container">
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('individual')">Individual</div>
-            <div class="tab" onclick="showTab('batch')">Lote</div>
-        </div>
-
-        <div id="individualTab" class="tab-content">
-            <div class="upload-section">
-                <h2>Subir CV Individual</h2>
-                <div class="file-drop" onclick="document.getElementById('singleFile').click()">
-                    <input type="file" id="singleFile" hidden accept=".pdf,.jpg,.png">
-                    <p>Arrastra o haz clic para seleccionar un CV</p>
-                </div>
-                <div id="individualProgress" class="progress-bar">
-                    <div class="progress" style="width: 0%"></div>
+        <section id="app-description">
+            <div class="description-content">
+                <div class="description-icon">📊</div>
+                <div class="description-text">
+                    <h2>Bienvenido a CV Analyzer</h2>
+                    <p>Optimiza tu proceso de selección de personal con nuestra herramienta inteligente. Sube CV de candidatos y evalúa automáticamente su compatibilidad con los requisitos del puesto. Compara múltiples perfiles a la vez y obtén recomendaciones personalizadas. ¡Ahorra tiempo y encuentra al candidato ideal!</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="batchTab" class="tab-content" style="display: none;">
-            <div class="upload-section">
-                <h2>Subir Múltiples CVs</h2>
-                <div class="file-drop" onclick="document.getElementById('batchFiles').click()">
-                    <input type="file" id="batchFiles" hidden multiple accept=".pdf,.jpg,.png">
-                    <p>Arrastra o haz clic para seleccionar múltiples CVs</p>
+        <section id="upload-form">
+            <h2>Cargar CVs</h2>
+            <div class="upload-container">
+                <div class="file-input-group">
+                    <h3>CV individual</h3>
+                    <div class="file-input-wrapper">
+                        <div class="file-input-button">Seleccionar archivo</div>
+                        <span class="file-name" id="single-file-name">Ningún archivo seleccionado</span>
+                        <input type="file" id="cv-file" accept=".pdf,.doc,.docx">
+                    </div>
+                    <button class="action-button" onclick="uploadCV()">Analizar CV</button>
                 </div>
-                <div id="filePreview" class="preview-list"></div>
-                <button onclick="startBatchProcessing()">Iniciar Análisis</button>
-                <div id="batchProgress" class="progress-bar">
-                    <div class="progress" style="width: 0%"></div>
+
+                <div class="file-input-group">
+                    <h3>Múltiples CVs</h3>
+                    <div class="file-input-wrapper">
+                        <div class="file-input-button">Seleccionar archivos</div>
+                        <span class="file-name" id="batch-file-name">Ningún archivo seleccionado</span>
+                        <input type="file" id="cv-batch-file" accept=".pdf,.doc,.docx" multiple>
+                    </div>
+                    <button class="action-button" onclick="uploadCVBatch()">Analizar CVs en lote</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="results"></div>
+        <section id="job-description-container">
+            <h2>Descripción del Trabajo</h2>
+            <textarea id="job-description-text" rows="8" cols="50">Buscamos un Desarrollador Full Stack con experiencia en:
+- Mínimo 3 años de experiencia en desarrollo web
+- Dominio de Python y JavaScript
+- Experiencia con frameworks como React, Angular o Vue.js
+- Conocimientos de bases de datos SQL y NoSQL
+- Experiencia con metodologías ágiles (Scrum, Kanban)
+- Familiaridad con servicios cloud (AWS, Azure o Google Cloud)
+- Git y CI/CD pipelines
+- API REST y GraphQL
+- Capacidad de trabajar en equipo
+- Inglés intermedio o avanzado
+
+Responsabilidades:
+- Desarrollar y mantener aplicaciones web
+- Colaborar con el equipo de diseño y producto
+- Escribir código limpio y documentado
+- Participar en code reviews
+- Resolver problemas técnicos complejos</textarea>
+            <button id="job-description-update" onclick="updateJobDescription()">Actualizar Descripción</button>
+        </section>
+
+        <section id="results">
+            <h2>Resultados del Análisis</h2>
+            <div id="cv-results-container">
+                <!-- Los resultados se cargarán aquí dinámicamente -->
+                <div class="loader-container" id="results-loader" style="display: none;">
+                    <div class="loader"></div>
+                    <p>Analizando CVs...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="chat-container">
+            <h2>Chat Asistente</h2>
+            <div id="chat-messages">
+                <div class="message assistant-message">
+                    ¡Hola! Soy tu asistente para el análisis de CVs. ¿En qué puedo ayudarte?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button id="chat-send" onclick="sendMessage()">Enviar</button>
+            </div>
+        </section>
     </div>
 
-    <script>
-        let currentAnalysisId = null;
-        let currentBatchId = null;
+    <footer id="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 CV Analyzer. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
-        function showTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
-            
-            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
-            document.getElementById(`${tabName}Tab`).style.display = 'block';
+    <div id="toast"></div>
+
+    <script>
+        // Referencias DOM
+        const singleFileInput = document.getElementById('cv-file');
+        const batchFileInput = document.getElementById('cv-batch-file');
+        const singleFileName = document.getElementById('single-file-name');
+        const batchFileName = document.getElementById('batch-file-name');
+        const resultsContainer = document.getElementById('cv-results-container');
+        const resultsLoader = document.getElementById('results-loader');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const jobDescriptionText = document.getElementById('job-description-text');
+        const toast = document.getElementById('toast');
+
+        // Event listeners para mostrar nombres de archivos
+        singleFileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                singleFileName.textContent = this.files[0].name;
+            } else {
+                singleFileName.textContent = 'Ningún archivo seleccionado';
+            }
+        });
+
+        batchFileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                batchFileName.textContent = `${this.files.length} archivo(s) seleccionado(s)`;
+            } else {
+                batchFileName.textContent = 'Ningún archivo seleccionado';
+            }
+        });
+
+        // Función para mostrar notificaciones Toast
+        function showToast(message, duration = 3000) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
         }
 
-        // Manejo de archivo individual
-        document.getElementById('singleFile').addEventListener('change', async function(e) {
-            const file = e.target.files[0];
+        // Función para cargar un CV individual
+        async function uploadCV() {
+            const file = singleFileInput.files[0];
+
+            if (!file) {
+                showToast('Por favor, selecciona un archivo.');
+                return;
+            }
+
+            resultsLoader.style.display = 'flex';
+
             const formData = new FormData();
             formData.append('file', file);
-            
+            formData.append('job_description', jobDescriptionText.value);
+
             try {
-                const response = await fetch('/api/upload-cv', {
+                const response = await fetch('/api/upload-cv/', {
                     method: 'POST',
                     body: formData
                 });
-                
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
                 const data = await response.json();
-                currentAnalysisId = data.analysis_id;
-                monitorProgress();
+                const analysisId = data.analysis_id;
+                await fetchAndDisplayResult(analysisId);
+                showToast('CV analizado exitosamente');
+
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error al subir el archivo:', error);
+                showToast('Error al subir el archivo.');
+            } finally {
+                resultsLoader.style.display = 'none';
             }
-        });
+        }
 
-        // Manejo de lote
-        document.getElementById('batchFiles').addEventListener('change', function(e) {
-            const preview = document.getElementById('filePreview');
-            preview.innerHTML = '';
-            
-            Array.from(this.files).forEach(file => {
-                const div = document.createElement('div');
-                div.className = 'preview-item';
-                div.innerHTML = `
-                    <span>${file.name}</span>
-                    <small>${(file.size/1024).toFixed(1)}KB</small>
-                `;
-                preview.appendChild(div);
-            });
-        });
+        // Función para cargar CVs en lote
+        async function uploadCVBatch() {
+            const files = batchFileInput.files;
 
-        async function startBatchProcessing() {
-            const files = document.getElementById('batchFiles').files;
+            if (files.length === 0) {
+                showToast('Por favor, selecciona al menos un archivo.');
+                return;
+            }
+
+            resultsLoader.style.display = 'flex';
+
             const formData = new FormData();
-            
-            Array.from(files).forEach(file => {
-                formData.append('files', file);
-            });
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+            formData.append('job_description', jobDescriptionText.value);
 
             try {
-                const response = await fetch('/api/upload-batch', {
+                const response = await fetch('/api/upload-batch/', {
                     method: 'POST',
                     body: formData
                 });
-                
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
                 const data = await response.json();
-                currentBatchId = data.batch_id;
-                monitorBatchProgress();
+                const batchId = data.batch_id;
+                await fetchAndDisplayBatchResult(batchId);
+                showToast('Lote de CVs analizado exitosamente');
+
+            } catch (error) {
+                console.error('Error al subir los archivos:', error);
+                showToast('Error al subir los archivos.');
+            } finally {
+                resultsLoader.style.display = 'none';
+            }
+        }
+
+        // Función para obtener y mostrar el resultado de un análisis individual
+        async function fetchAndDisplayResult(analysisId) {
+            let result;
+            let status = 'processing';
+            let progress = 0;
+
+            while (status !== 'completed' && status !== 'error') {
+                try {
+                    const statusResponse = await fetch(`/api/analysis-status/${analysisId}`);
+                    const statusData = await statusResponse.json();
+                    status = statusData.status;
+                    progress = statusData.progress;
+
+                    if (status === 'completed') {
+                        const resultResponse = await fetch(`/api/analysis-result/${analysisId}`);
+                        result = await resultResponse.json();
+                        break;
+                    } else if (status === 'error') {
+                        result = { error: statusData.message };
+                        break;
+                    }
+                } catch (error) {
+                    console.error('Error al obtener el estado del análisis:', error);
+                    status = 'error';
+                    result = { error: 'Error de conexión' };
+                    break;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
+            }
+
+            displayCVResult(analysisId, result);
+        }
+
+        // Función para obtener y mostrar el resultado de un análisis de lote
+        async function fetchAndDisplayBatchResult(batchId) {
+            let results;
+            let status = 'processing';
+            let progress = 0;
+
+            while (status !== 'completed' && status !== 'error') {
+                try {
+                    const statusResponse = await fetch(`/api/analysis-status/${batchId}`);
+                    const statusData = await statusResponse.json();
+                    status = statusData.status;
+                    progress = statusData.progress;
+
+                    if (status === 'completed') {
+                        const resultResponse = await fetch(`/api/batch-result/${batchId}`);
+                        results = await resultResponse.json();
+                        break;
+                    } else if (status === 'error') {
+                        results = { error: statusData.message };
+                        break;
+                    }
+                } catch (error) {
+                    console.error('Error al obtener el estado del análisis por lotes:', error);
+                    status = 'error';
+                    results = { error: 'Error de conexión' };
+                    break;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1 segundo
+            }
+
+            displayBatchResults(batchId, results);
+        }
+
+        // Función para mostrar el resultado del análisis de un CV
+        function displayCVResult(analysisId, result) {
+            let resultHTML = `<div class="cv-result">`;
+            if (result.error) {
+                resultHTML += `<h3>Error:</h3><p>${result.error}</p>`;
+            } else {
+                const compatibility = result.evaluacion_compatibilidad?.compatibilidad_general || 0;
+                resultHTML += `
+                    <h3>${result.nombre || 'Candidato'}</h3>
+                    <p>Compatibilidad General: ${compatibility}%</p>
+                    <div class="compatibility-bar">
+                        <div class="compatibility-fill" style="width: ${compatibility}%"></div>
+                    </div>
+                    <button class="view-details-btn" onclick="viewCVDetails('${analysisId}')">Ver Detalles</button>
+                `;
+            }
+            resultHTML += `</div>`;
+            
+            if (!document.querySelector(`[data-analysis-id="${analysisId}"]`)) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = resultHTML;
+                tempDiv.firstChild.setAttribute('data-analysis-id', analysisId);
+                resultsContainer.appendChild(tempDiv.firstChild);
+            }
+        }
+
+        // Función para mostrar los resultados del análisis de un lote de CVs
+        function displayBatchResults(batchId, results) {
+            if (results.error) {
+                resultsContainer.innerHTML = `<div class="cv-result"><h3>Error:</h3><p>${results.error}</p></div>`;
+                return;
+            }
+
+            // Ordenar por porcentaje de compatibilidad (de mayor a menor)
+            const sortedResults = [...results].sort((a, b) => {
+                const compatA = a.evaluacion_compatibilidad?.compatibilidad_general || 0;
+                const compatB = b.evaluacion_compatibilidad?.compatibilidad_general || 0;
+                return compatB - compatA;
+            });
+
+            let resultsHTML = '';
+            for (const result of sortedResults) {
+                const compatibility = result.evaluacion_compatibilidad?.compatibilidad_general || 0;
+                resultsHTML += `
+                    <div class="cv-result" data-analysis-id="${result.analysis_id}">
+                        <h4>${result.nombre || 'Candidato'}</h4>
+                        <p>Compatibilidad General: ${compatibility}%</p>
+                        <div class="compatibility-bar">
+                            <div class="compatibility-fill" style="width: ${compatibility}%"></div>
+                        </div>
+                        <button class="view-details-btn" onclick="viewCVDetails('${result.analysis_id}')">Ver Detalles</button>
+                    </div>
+                `;
+            }
+            
+            resultsContainer.innerHTML = resultsHTML;
+        }
+
+        // Función para ver los detalles de un CV (redireccionar a otra página o mostrar en modal)
+        function viewCVDetails(analysisId) {
+            window.location.href = `/view/cv/${analysisId}`;
+        }
+
+        // Función para enviar un mensaje al chat
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Mostrar el mensaje del usuario
+            displayChatMessage('user', message);
+            chatInput.value = '';
+
+            try {
+                const cvId = document.querySelector('.cv-result') ? 
+                    document.querySelector('.cv-result').getAttribute('data-analysis-id') : 
+                    'default_cv_id';
+
+                const response = await fetch('/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ cv_id: cvId, message: message })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayChatMessage('assistant', data.content);
+            } catch (error) {
+                console.error('Error al enviar mensaje:', error);
+                displayChatMessage('assistant', 'Lo siento, ha ocurrido un error al procesar tu mensaje.');
+            }
+        }
+
+        // Función para mostrar un mensaje en el chat
+        function displayChatMessage(role, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            messageDiv.textContent = content;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll al final
+        }
+
+        // Función para actualizar la descripción del trabajo
+        async function updateJobDescription() {
+            const description = jobDescriptionText.value;
+            try {
+                const response = await fetch('/api/update-job-description', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description: description })
+                });
+
+                if (response.ok) {
+                    showToast('Descripción del trabajo actualizada.');
+                } else {
+                    showToast('Error al actualizar la descripción.');
+                }
             } catch (error) {
                 console.error('Error:', error);
+                showToast('Error al actualizar la descripción.');
             }
         }
 
-        async function monitorProgress() {
-            const response = await fetch(`/api/analysis-status/${currentAnalysisId}`);
-            const status = await response.json();
-            
-            if (status.status === 'completed') {
-                showResults(status.result);
-            } else if (status.status === 'error') {
-                alert('Error: ' + status.error);
-            } else {
-                setTimeout(monitorProgress, 1000);
-            }
-        }
-
-        async function monitorBatchProgress() {
-            const response = await fetch(`/api/analysis-status/${currentBatchId}`);
-            const status = await response.json();
-            
-            if (status.status === 'completed') {
-                showBatchResults(status.results);
-            } else if (status.status === 'error') {
-                alert('Error: ' + status.error);
-            } else {
-                document.getElementById('batchProgress').style.width = `${status.progress}%`;
-                setTimeout(monitorBatchProgress, 1000);
-            }
-        }
-
-        function showResults(data) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <h3>Resultados del Análisis</h3>
-                <p>Nombre: ${data.nombre}</p>
-                <p>Compatibilidad: ${data.compatibilidad}%</p>
-                <h4>Experiencia Verificada:</h4>
-                <ul>
-                    ${data.empresas_verificadas.map(e => `
-                        <li>${e.nombre}: ${e.verificada ? '✓ Verificada' : '⚠ No verificada'}</li>
-                    `).join('')}
-                </ul>
-            `;
-        }
-
-        function showBatchResults(results) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = `
-                <h3>Resultados del Lote</h3>
-                <p>Total CVs procesados: ${results.length}</p>
-                <div class="batch-results">
-                    ${results.map(result => `
-                        <div class="cv-result">
-                            <h4>${result.nombre}</h4>
-                            <p>Compatibilidad: ${result.compatibilidad}%</p>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
+        // Animación de entrada para secciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
     </script>
 </body>
+
 </html>
