@@ -2,7 +2,8 @@ import os
 import json
 import uuid
 from typing import List, Dict, Any
-
+import tempfile
+from openai import OpenAI
 import openai
 import wikipedia
 from fastapi import FastAPI, UploadFile, File, HTTPException
@@ -16,6 +17,8 @@ import pytesseract
 from dotenv import load_dotenv
 
 
+print(">> Ejecutando archivo:", __file__)
+
 load_dotenv()
 
 # Configurar la clave de API de OpenAI
@@ -26,6 +29,8 @@ openai.api_key = os.getenv(ENV_API_KEY)
 
 # Modelo de OpenAI a utilizar (GPT-3.5 Turbo)
 MODEL = "gpt-3.5-turbo"
+
+client = OpenAI()
 
 # Descripción del puesto editable por el usuario (puede moverse al frontend si se desea)
 descripcion_puesto: Dict[str, Any] = {
@@ -48,7 +53,8 @@ app = FastAPI(title="TalentAI", version="1.0")
 # Configurar CORS para permitir acceso desde cualquier origen
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Restringir a ["http://localhost:3000"] por seguridad
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -91,7 +97,7 @@ def parsear_cv(texto: str) -> Dict[str, Any]:
         "\u2022 skills: lista de cadenas."
     )
     user_msg = f"Texto del CV:\n{texto}"
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=MODEL,
         messages=[
             {"role": "system", "content": system_msg},
@@ -130,7 +136,7 @@ def calcular_compatibilidad(cv: Dict[str, Any]) -> Dict[str, Any]:
         f"Perfil del candidato (JSON): {json.dumps(cv, ensure_ascii=False)}\n"
         f"Descripción del puesto (JSON): {json.dumps(descripcion_puesto, ensure_ascii=False)}"
     )
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=MODEL,
         messages=[
             {"role": "system", "content": system_msg},
@@ -142,7 +148,7 @@ def calcular_compatibilidad(cv: Dict[str, Any]) -> Dict[str, Any]:
     return json.loads(response.choices[0].message.content)
 
 # ------------------- Endpoints de API -------------------
-
+print("Registrando endpoint de procesamiento de CVs...")
 @app.post("/procesar_cvs")
 async def procesar_cvs(cvs: List[UploadFile] = File(...)) -> List[Dict[str, Any]]:
     """
@@ -157,9 +163,9 @@ async def procesar_cvs(cvs: List[UploadFile] = File(...)) -> List[Dict[str, Any]
     for archivo in cvs:
         contenido = await archivo.read()
         ext = os.path.splitext(archivo.filename)[1].lower()
-        tmp_path = f"/tmp/{uuid.uuid4().hex}{ext}"
-        with open(tmp_path, 'wb') as f:
-            f.write(contenido)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+            tmp.write(contenido)
+            tmp_path = tmp.name
 
         if ext == ".pdf":
             texto = extraer_texto_pdf(tmp_path)
@@ -193,6 +199,7 @@ class ChatRequest(BaseModel):
     session_id: str
     message: str
 
+print("Registrando endpoint de chat...")
 @app.post("/chat")
 def chat(request: ChatRequest) -> Dict[str, Any]:
     """
@@ -203,7 +210,7 @@ def chat(request: ChatRequest) -> Dict[str, Any]:
     if not sesiones:
         raise HTTPException(status_code=404, detail="Sesión no encontrada")
     sesiones.append({"role": "user", "content": request.message})
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=MODEL,
         messages=sesiones,
         temperature=0.7,
