@@ -7,10 +7,16 @@ import openai
 import wikipedia
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from pdfminer.high_level import extract_text as extract_pdf_text
 from PIL import Image
 import pytesseract
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Configurar la clave de API de OpenAI
 ENV_API_KEY = "OPENAI_API_KEY"
@@ -46,6 +52,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Sirve index.html desde la carpeta templates
+@app.get("/", response_class=FileResponse)
+async def get_index():
+    return FileResponse("templates/index.html")
 
 # Diccionario en memoria para almacenar el contexto de chat por sesión
 chat_sessions: Dict[str, List[Dict[str, str]]] = {}
@@ -205,4 +218,4 @@ def chat(request: ChatRequest) -> Dict[str, Any]:
 if __name__ == "__main__":
     import uvicorn
     # Ejecutar FastAPI en modo recarga automática para desarrollo
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
