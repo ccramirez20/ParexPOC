@@ -791,7 +791,7 @@
             updateFileList();
             processBtn.disabled = files.length === 0;
         }
-        
+    
         function processFiles() {
             if (files.length === 0) return;
             
@@ -803,209 +803,442 @@
                 formData.append('cvs', file);
             });
             
+            console.log("Enviando archivos:", files.map(f => f.name));
+            
             fetch('/procesar_cvs', {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
+                console.log("Respuesta HTTP:", response.status, response.statusText);
+                
                 if (!response.ok) {
-                    throw new Error('Error al procesar los CVs');
+                    throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
                 }
-                return response.json();
+                
+                return response.text().then(text => {
+                    try {
+                        if (!text || text.trim() === '') {
+                            throw new Error("Respuesta vacía del servidor");
+                        }
+                        console.log("Texto de respuesta:", text.substring(0, 200) + (text.length > 200 ? "..." : ""));
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error("Error al parsear JSON:", e);
+                        console.error("Texto recibido:", text);
+                        throw new Error("La respuesta del servidor no es un JSON válido");
+                    }
+                });
             })
             .then(data => {
                 loading.style.display = 'none';
                 processBtn.disabled = false;
 
-                // Verifica si todos los elementos tienen error
-                const todosFallaron = data.length > 0 && data.every(item => item.error);
+                console.log("Datos recibidos:", data);
                 
-                if (todosFallaron) {
-                    // Si todos fallaron, mostrar alerta general
-                    alert('Ocurrió un error al procesar los CVs. Por favor intenta de nuevo.');
-                    return;
-                }
+                try {
+                    // Validar que data sea un array
+                    if (!Array.isArray(data)) {
+                        console.error("La respuesta no es un array:", data);
+                        alert('Formato de respuesta incorrecto. Por favor contacta al soporte técnico.');
+                        return;
+                    }
+                    
+                    // Si no hay datos, no hay nada que procesar
+                    if (data.length === 0) {
+                        console.warn("La respuesta está vacía");
+                        alert('No se recibieron resultados del servidor.');
+                        return;
+                    }
 
-                // Mostrar errores individuales si existen
-                const errores = data.filter(item => item.error);
-                if (errores.length > 0) {
-                    console.warn("Algunos CVs con errores:", errores);
-                    alert(`Algunos CVs no se pudieron procesar:\n${errores.map(e => `${e.filename}: ${e.error}`).join('\n')}`);
-                }
-
-                cvResults = data.filter(item => !item.error); // Filtra solo los exitosos
-                if (cvResults.length > 0) {
+                    // Verificar la estructura de cada elemento
+                    cvResults = data.map(item => {
+                        // Si el elemento no es un objeto, crear un objeto de error
+                        if (!item || typeof item !== 'object') {
+                            return { 
+                                error: "Formato de datos inválido", 
+                                filename: "Archivo desconocido" 
+                            };
+                        }
+                        
+                        // Mantener el elemento original pero asegurarse de que tenga las propiedades básicas
+                        if (!item.error) {
+                            if (!item.cv_info) item.cv_info = {};
+                            if (!item.compatibilidad) item.compatibilidad = {};
+                            
+                            // Garantizar que existan las propiedades necesarias
+                            if (!item.cv_info.skills) item.cv_info.skills = [];
+                            if (!item.compatibilidad.strengths) item.compatibilidad.strengths = [];
+                            if (!item.compatibilidad.gaps) item.compatibilidad.gaps = [];
+                        }
+                        
+                        return item;
+                    });
+                    
+                    // Identificar CVs con error
+                    const errores = cvResults.filter(item => item.error);
+                    
+                    // Caso 1: Todos los CVs fallaron
+                    if (errores.length === cvResults.length && cvResults.length > 0) {
+                        console.error("Todos los CVs tienen errores:", errores);
+                        alert('Ocurrió un error al procesar los CVs. Por favor intenta de nuevo.');
+                        return;
+                    }
+                    
+                    // Caso 2: Algunos CVs fallaron, otros se procesaron correctamente
+                    if (errores.length > 0 && cvResults.length > errores.length) {
+                        console.warn("Algunos CVs con errores:", errores);
+                        alert(`Algunos CVs no se pudieron procesar:\n${errores.map(e => `${e.filename || 'Archivo desconocido'}: ${e.error || 'Error desconocido'}`).join('\n')}`);
+                    }
+                    
+                    // Intentar mostrar los resultados
                     displayResults();
                     resultsContainer.style.display = 'block';
-                    // Scroll to results
                     resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                    
+                } catch (processingError) {
+                    console.error("Error al procesar la respuesta:", processingError);
+                    alert('Error al procesar la respuesta del servidor. Por favor intenta de nuevo.');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error en la petición:', error);
                 loading.style.display = 'none';
                 processBtn.disabled = false;
-                alert('Ocurrió un error al procesar los CVs. Por favor intenta de nuevo.');
+                
+                // Mensaje de error más específico según el tipo de error
+                if (error.message.includes("JSON")) {
+                    alert("Error: La respuesta del servidor no tiene el formato esperado. Contacta al soporte técnico.");
+                } else if (error.message.includes("vacía")) {
+                    alert("Error: El servidor envió una respuesta vacía. Intenta de nuevo o contacta al soporte técnico.");
+                } else if (error.message.includes("HTTP")) {
+                    alert(`Error de conexión: ${error.message}. Por favor intenta de nuevo más tarde.`);
+                } else {
+                    alert("Ocurrió un error inesperado. Por favor intenta de nuevo.");
+                }
             });
         }
-        
+
         function displayResults() {
-            // Clear previous results
-            cvOverview.innerHTML = '';
+            // Limpiar mensajes de error anteriores
+            document.querySelectorAll('.alert-danger').forEach(el => el.remove());
             
-            // Generate overview cards
-            cvResults.forEach((result, index) => {
-                const card = document.createElement('div');
-                card.className = 'cv-card';
-                card.setAttribute('data-index', index);
+            try {
+                // Limpiar resultados anteriores
+                cvOverview.innerHTML = '';
+                
+                // Validación defensiva
+                if (!Array.isArray(cvResults)) {
+                    console.error("cvResults no es un array:", cvResults);
+                    cvOverview.innerHTML = '<div class="alert alert-danger">Error: formato de resultados inválido.</div>';
+                    return;
+                }
+                
+                if (cvResults.length === 0) {
+                    console.warn("No hay resultados para mostrar");
+                    cvOverview.innerHTML = '<div class="alert alert-warning">No hay resultados para mostrar.</div>';
+                    return;
+                }
+                
+                // Generar tarjetas de resumen
+                cvResults.forEach((result, index) => {
+                    try {
+                        // Crear el elemento contenedor para la tarjeta
+                        const card = document.createElement('div');
+                        card.className = 'cv-card';
+                        card.setAttribute('data-index', index);
+                        
+                        // Garantizar que el nombre del archivo siempre tenga un valor
+                        const filename = result && result.filename ? result.filename : `CV ${index + 1}`;
+                        
+                        // Manejar caso de error
+                        if (result && result.error) {
+                            card.innerHTML = `
+                                <h3>${sanitizeHTML(filename)}</h3>
+                                <p style="color: red; font-weight: bold;">Error: ${sanitizeHTML(result.error)}</p>
+                            `;
+                            cvOverview.appendChild(card);
+                            return; // No seguir procesando este CV
+                        }
+                        
+                        // Verificar que los objetos necesarios existan
+                        if (!result || !result.cv_info || !result.compatibilidad) {
+                            console.warn(`Datos incompletos para CV en índice ${index}:`, result);
+                            card.innerHTML = `
+                                <h3>${sanitizeHTML(filename)}</h3>
+                                <p style="color: orange; font-weight: bold;">Datos incompletos</p>
+                            `;
+                            cvOverview.appendChild(card);
+                            return; // No seguir procesando este CV
+                        }
+                        
+                        // Extraer datos con valores por defecto para evitar errores
+                        const compatibility = Number(result.compatibilidad.compatibility_percentage || 0);
+                        
+                        // Asegurarse de que skills existe y es un array
+                        const skills = Array.isArray(result.cv_info.skills) ? result.cv_info.skills : [];
+                        
+                        // Crear el HTML de la tarjeta
+                        card.innerHTML = `
+                            <h3>${sanitizeHTML(filename)}</h3>
+                            <div class="compatibility">
+                                <span>Compatibilidad:</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${compatibility}%;"></div>
+                                </div>
+                                <span>${compatibility}%</span>
+                            </div>
+                            <p><strong>Habilidades:</strong> ${skills.slice(0, 3).map(sanitizeHTML).join(', ')}${skills.length > 3 ? '...' : ''}</p>
+                        `;
+                        
+                        cvOverview.appendChild(card);
+                        
+                        // Agregar event listener para mostrar detalles
+                        card.addEventListener('click', () => {
+                            try {
+                                // Resaltar la tarjeta seleccionada
+                                document.querySelectorAll('.cv-card').forEach(c => {
+                                    c.style.borderLeftColor = 'var(--primary)';
+                                });
+                                card.style.borderLeftColor = '#28a745';
+                                
+                                // Mostrar detalles del CV
+                                showCVDetail(result);
+                                
+                                // Actualizar el ID de sesión de chat actual
+                                currentChatSessionId = result.session_id || null;
+                                
+                                // Cambiar a la pestaña de detalles
+                                tabs.forEach(t => t.classList.remove('active'));
+                                document.querySelector('.tab[data-tab="details"]')?.classList.add('active');
+                                
+                                tabContents.forEach(content => {
+                                    content.classList.remove('active');
+                                });
+                                document.getElementById('details')?.classList.add('active');
+                            } catch (clickError) {
+                                console.error("Error al manejar clic en tarjeta:", clickError);
+                                alert("Ocurrió un error al mostrar los detalles. Por favor intenta de nuevo.");
+                            }
+                        });
+                        
+                    } catch (cardError) {
+                        console.error(`Error al crear tarjeta para índice ${index}:`, cardError);
+                        // En caso de error en una tarjeta individual, continuamos con las demás
+                    }
+                });
+                
+                if (cvOverview.children.length === 0) {
+                    cvOverview.innerHTML = '<div class="alert alert-warning">No se pudieron mostrar los resultados.</div>';
+                }
+                
+            } catch (error) {
+                console.error("Error general en displayResults:", error);
+                cvOverview.innerHTML = '<div class="alert alert-danger">Error al mostrar los resultados. Por favor intenta de nuevo.</div>';
+            }
+        }
 
-                // Mostrar error si existe
-                const errorMsg = result.error ? `<p style="color: red; font-weight: bold;">Error: ${result.error}</p>` : '';
+        // Función de ayuda para sanitizar HTML y prevenir inyecciones XSS
+        function sanitizeHTML(text) {
+            if (text === undefined || text === null) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
-                if (result.error) {
-                    card.innerHTML = `
-                        <h3>${result.filename}</h3>
-                        ${errorMsg}
+        function showCVDetail(result) {
+            try {
+                console.log("Mostrando detalles del CV:", result);
+                
+                // Validación defensiva
+                if (!result || typeof result !== 'object') {
+                    throw new Error("Datos del CV inválidos");
+                }
+                
+                // Acceso seguro a las propiedades con valores por defecto
+                const cv = result.cv_info || {};
+                const compatibility = result.compatibilidad || {};
+                const filename = sanitizeHTML(result.filename || "CV sin nombre");
+                
+                // Extraer datos con validación
+                const compatibilityPercentage = Number(compatibility.compatibility_percentage || 0);
+                const strengths = Array.isArray(compatibility.strengths) ? compatibility.strengths : [];
+                const gaps = Array.isArray(compatibility.gaps) ? compatibility.gaps : [];
+                const workExperience = Array.isArray(cv.work_experience) ? cv.work_experience : [];
+                const education = Array.isArray(cv.education) ? cv.education : [];
+                const languages = Array.isArray(cv.languages) ? cv.languages : [];
+                const skills = Array.isArray(cv.skills) ? cv.skills : [];
+                const verificationData = cv.verificacion_empresas || {};
+                
+                // Comenzar a construir el HTML
+                let detailHTML = `
+                    <h2>${filename}</h2>
+                    <div class="compatibility">
+                        <span>Compatibilidad:</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${compatibilityPercentage}%;"></div>
+                        </div>
+                        <span>${compatibilityPercentage}%</span>
+                    </div>
+                    
+                    <div class="strengths-gaps">
+                        <div class="strength-item">
+                            <h3><i class="fas fa-check-circle"></i> Fortalezas</h3>
+                            <ul>
+                                ${strengths.length > 0 ? 
+                                strengths.map(s => `<li>${sanitizeHTML(s)}</li>`).join('') : 
+                                '<li>No se identificaron fortalezas</li>'}
+                            </ul>
+                        </div>
+                        <div class="gap-item">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Brechas</h3>
+                            <ul>
+                                ${gaps.length > 0 ? 
+                                gaps.map(g => `<li>${sanitizeHTML(g)}</li>`).join('') : 
+                                '<li>No se identificaron brechas</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                // Sección de experiencia laboral
+                detailHTML += `<h3 class="section-title">Experiencia Laboral</h3>`;
+                if (workExperience.length > 0) {
+                    workExperience.forEach(exp => {
+                        // Acceso seguro a las propiedades
+                        const title = sanitizeHTML(exp.title || 'No especificado');
+                        const company = sanitizeHTML(exp.company || 'No especificado');
+                        const startDate = sanitizeHTML(exp.start_date || 'N/A');
+                        const endDate = sanitizeHTML(exp.end_date || 'Actual');
+                        
+                        // Verificar si la empresa está verificada
+                        const isVerified = Boolean(verificationData[exp.company || '']);
+                        
+                        detailHTML += `
+                            <div class="detail-item">
+                                <strong>${title}</strong> en ${company}
+                                <span class="company-verify ${isVerified ? 'verify-true' : 'verify-false'}">
+                                    <i class="fas fa-${isVerified ? 'check' : 'times'}-circle"></i>
+                                    ${isVerified ? 'Verificada' : 'No verificada'}
+                                </span>
+                                <br>
+                                <span>${startDate} - ${endDate}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    detailHTML += `<div class="detail-item">No hay información de experiencia laboral</div>`;
+                }
+                
+                // Sección de educación
+                detailHTML += `<h3 class="section-title">Educación</h3>`;
+                if (education.length > 0) {
+                    education.forEach(edu => {
+                        const degree = sanitizeHTML(edu.degree || 'No especificado');
+                        const institution = sanitizeHTML(edu.institution || 'No especificada');
+                        const startDate = sanitizeHTML(edu.start_date || 'N/A');
+                        const endDate = sanitizeHTML(edu.end_date || 'Actual');
+                        
+                        detailHTML += `
+                            <div class="detail-item">
+                                <strong>${degree}</strong> en ${institution}
+                                <br>
+                                <span>${startDate} - ${endDate}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    detailHTML += `<div class="detail-item">No hay información de educación</div>`;
+                }
+                
+                // Sección de idiomas
+                detailHTML += `<h3 class="section-title">Idiomas</h3>`;
+                if (languages.length > 0) {
+                    languages.forEach(lang => {
+                        const language = sanitizeHTML(lang.language || 'No especificado');
+                        const proficiency = sanitizeHTML(lang.proficiency || 'No especificado');
+                        
+                        detailHTML += `
+                            <div class="detail-item">
+                                <strong>${language}</strong>: ${proficiency}
+                            </div>
+                        `;
+                    });
+                } else {
+                    detailHTML += `<div class="detail-item">No hay información de idiomas</div>`;
+                }
+                
+                // Sección de habilidades
+                detailHTML += `<h3 class="section-title">Habilidades</h3>`;
+                if (skills.length > 0) {
+                    detailHTML += `
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${skills.map(skill => `
+                                <span style="background-color: var(--light); padding: 0.3rem 0.8rem; border-radius: 20px;">
+                                    ${sanitizeHTML(skill)}
+                                </span>
+                            `).join('')}
+                        </div>
                     `;
                 } else {
-                    const compatibility = result.compatibilidad.compatibility_percentage || 0;
-
-                    card.innerHTML = `
-                        <h3>${result.filename}</h3>
-                        ${errorMsg}
-                        <div class="compatibility">
-                            <span>Compatibilidad:</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${compatibility}%;"></div>
-                            </div>
-                            <span>${compatibility}%</span>
+                    detailHTML += `<div class="detail-item">No hay información de habilidades</div>`;
+                }
+                
+                // Botón de chat solo si existe session_id
+                if (result.session_id) {
+                    detailHTML += `
+                        <div style="text-align: center; margin-top: 2rem;">
+                            <button class="btn" id="chat-about-cv" data-session="${sanitizeHTML(result.session_id)}">
+                                <i class="fas fa-comments"></i> Chatear sobre este candidato
+                            </button>
                         </div>
-                        <p><strong>Habilidades:</strong> ${result.cv_info.skills.slice(0, 3).join(', ')}${result.cv_info.skills.length > 3 ? '...' : ''}</p>
                     `;
                 }
-
-                cvOverview.appendChild(card);
                 
-                // Si hay error, no se habilita el clic para detalle/chat
-                if (!result.error) {
-                    card.addEventListener('click', () => {
-                        document.querySelectorAll('.cv-card').forEach(c => c.style.borderLeftColor = 'var(--primary)');
-                        card.style.borderLeftColor = '#28a745';
-                        showCVDetail(result);
-                        
-                        // Set current chat session
-                        currentChatSessionId = result.session_id;
-                        
-                        // Switch to detail tab
-                        tabs.forEach(t => t.classList.remove('active'));
-                        document.querySelector('.tab[data-tab="details"]').classList.add('active');
-                        
-                        tabContents.forEach(content => {
-                            content.classList.remove('active');
-                        });
-                        document.getElementById('details').classList.add('active');
+                // Actualizar el contenido
+                cvDetail.innerHTML = detailHTML;
+                
+                // Añadir event listener al botón de chat si existe
+                const chatBtn = document.getElementById('chat-about-cv');
+                if (chatBtn) {
+                    chatBtn.addEventListener('click', function() {
+                        try {
+                            const sessionId = this.getAttribute('data-session');
+                            if (sessionId) {
+                                currentChatSessionId = sessionId;
+                                
+                                // Añadir mensaje del sistema al chat
+                                const systemMessage = document.createElement('div');
+                                systemMessage.className = 'message assistant-message';
+                                systemMessage.textContent = `Ahora estamos discutiendo sobre el CV "${filename}". ¿Qué quieres saber sobre este candidato?`;
+                                chatMessages.appendChild(systemMessage);
+                                
+                                // Hacer scroll al final del chat
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                                
+                                // Enfocar el campo de entrada
+                                document.querySelector('[data-tab="chat"]')?.click();
+                                setTimeout(() => {
+                                    chatInput.focus();
+                                }, 500);
+                            } else {
+                                console.error("Botón de chat sin session_id");
+                            }
+                        } catch (chatError) {
+                            console.error("Error al iniciar chat:", chatError);
+                        }
                     });
                 }
-            });
+            } catch (error) {
+                console.error("Error en showCVDetail:", error);
+                cvDetail.innerHTML = '<div class="alert alert-danger">Error al mostrar los detalles del CV. Por favor intenta de nuevo.</div>';
+            }
         }
-                
-        function showCVDetail(result) {
-            const cv = result.cv_info;
-            const compatibility = result.compatibilidad;
-            
-            let detailHTML = `
-                <h2>${result.filename}</h2>
-                <div class="compatibility">
-                    <span>Compatibilidad:</span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${compatibility.compatibility_percentage}%;"></div>
-                    </div>
-                    <span>${compatibility.compatibility_percentage}%</span>
-                </div>
-                
-                <div class="strengths-gaps">
-                    <div class="strength-item">
-                        <h3><i class="fas fa-check-circle"></i> Fortalezas</h3>
-                        <ul>
-                            ${compatibility.strengths.map(s => `<li>${s}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="gap-item">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Brechas</h3>
-                        <ul>
-                            ${compatibility.gaps.map(g => `<li>${g}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-                
-                <h3 class="section-title">Experiencia Laboral</h3>
-                ${cv.work_experience.map(exp => `
-                    <div class="detail-item">
-                        <strong>${exp.title}</strong> en ${exp.company}
-                        <span class="company-verify ${cv.verificacion_empresas[exp.company] ? 'verify-true' : 'verify-false'}">
-                            <i class="fas fa-${cv.verificacion_empresas[exp.company] ? 'check' : 'times'}-circle"></i>
-                            ${cv.verificacion_empresas[exp.company] ? 'Verificada' : 'No verificada'}
-                        </span>
-                        <br>
-                        <span>${exp.start_date || 'N/A'} - ${exp.end_date || 'Actual'}</span>
-                    </div>
-                `).join('')}
-                
-                <h3 class="section-title">Educación</h3>
-                ${cv.education.map(edu => `
-                    <div class="detail-item">
-                        <strong>${edu.degree}</strong> en ${edu.institution}
-                        <br>
-                        <span>${edu.start_date || 'N/A'} - ${edu.end_date || 'Actual'}</span>
-                    </div>
-                `).join('')}
-                
-                <h3 class="section-title">Idiomas</h3>
-                ${cv.languages.map(lang => `
-                    <div class="detail-item">
-                        <strong>${lang.language}</strong>: ${lang.proficiency}
-                    </div>
-                `).join('')}
-                
-                <h3 class="section-title">Habilidades</h3>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                    ${cv.skills.map(skill => `
-                        <span style="background-color: var(--light); padding: 0.3rem 0.8rem; border-radius: 20px;">
-                            ${skill}
-                        </span>
-                    `).join('')}
-                </div>
-                
-                <div style="text-align: center; margin-top: 2rem;">
-                    <button class="btn" id="chat-about-cv" data-session="${result.session_id}">
-                        <i class="fas fa-comments"></i> Chatear sobre este candidato
-                    </button>
-                </div>
-            `;
-            
-            cvDetail.innerHTML = detailHTML;
-            
-            // Add event listener to the chat button
-            document.getElementById('chat-about-cv').addEventListener('click', function() {
-                currentChatSessionId = this.getAttribute('data-session');
-                
-                // Add a system message to the chat
-                const systemMessage = document.createElement('div');
-                systemMessage.className = 'message assistant-message';
-                systemMessage.textContent = `Ahora estamos discutiendo sobre el CV "${result.filename}". ¿Qué quieres saber sobre este candidato?`;
-                chatMessages.appendChild(systemMessage);
-                
-                // Scroll chat to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                // Focus on chat input
-                document.querySelector('[data-tab="details"]').scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => {
-                    chatInput.focus();
-                }, 500);
-            });
-        }
-        
+
+
         function sendChatMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
