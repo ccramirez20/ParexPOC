@@ -8,7 +8,7 @@ __pycache__/
  
 # Entornos virtuales
 
-venv311/
+src/venv311
 
 .env
 
@@ -21,6 +21,8 @@ ENV/
 env.bak/
 
 venv.bak/
+
+src/venv311/
  
 # Archivos de configuración y secretos
 
