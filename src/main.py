@@ -16,7 +16,7 @@ from PIL import Image
 import pytesseract
 from dotenv import load_dotenv
 import io
-import cv2
+#import cv2
 import numpy as np
 import fitz  # PyMuPDF para manejo avanzado de PDFs
 
@@ -141,16 +141,16 @@ def mejorar_imagen(image):
         if img_np.dtype != np.uint8:
             img_np = img_np.astype(np.uint8)
         
-        try:
+        #try:
             # Aplicar umbral adaptativo
-            img_np = cv2.adaptiveThreshold(
-                img_np, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
-                cv2.THRESH_BINARY, 11, 2
-            )
+            #img_np = cv2.adaptiveThreshold(
+                #img_np, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
+                #cv2.THRESH_BINARY, 11, 2
+            #)
             
             # Reducir ruido
-            img_np = cv2.medianBlur(img_np, 3)
-        except cv2.error:
+            #img_np = cv2.medianBlur(img_np, 3)
+        #except cv2.error:
             # Si falla el procesamiento de OpenCV, retornar imagen original
             return image
         
