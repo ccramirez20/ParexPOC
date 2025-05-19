@@ -42,12 +42,13 @@
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
+            gap: 2rem;
         }
         
         .logo-container {
             flex: 0 0 200px;
             height: 70px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #480E2A;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -55,6 +56,11 @@
             margin-right: 1rem;
         }
         
+        .logo-img {
+            height: 40px; 
+            width: auto;
+        }
+
         .logo-text {
             font-size: 1.8rem;
             font-weight: bold;
@@ -450,43 +456,15 @@
     <header>
         <div class="header-content">
             <div class="logo-container">
-                <div class="logo-text">TalentAI</div>
+                <img src="/static/indra-logo.png" alt="Logo TalentAI" class="logo-img">
             </div>
             <div class="header-title">
-                <h1>Asistente Inteligente de Selección</h1>
+                <h1>TalentAI - Asistente Inteligente de Selección</h1>
             </div>
         </div>
     </header>
     
     <div class="container">
-        <!-- Navegación por pestañas principal -->
-        <div class="card">
-            <div class="card-header">
-                <i class="fas fa-th-large"></i>
-                <h2>TalentAI - Asistente Inteligente de Selección</h2>
-            </div>
-            <div class="card-body">
-                <!-- Pestañas principales de navegación -->
-                <ul class="main-tabs">
-                    <li class="main-tab active" data-section="intro-section">
-                        <i class="fas fa-info-circle"></i> Introducción
-                    </li>
-                    <li class="main-tab" data-section="upload-section">
-                        <i class="fas fa-upload"></i> Cargar CVs
-                    </li>
-                    <li class="main-tab" data-section="results-section">
-                        <i class="fas fa-chart-bar"></i> Resultados
-                    </li>
-                    <li class="main-tab" data-section="chat-section">
-                        <i class="fas fa-comments"></i> Chat
-                    </li>
-                    <li class="main-tab" data-section="job-section">
-                        <i class="fas fa-briefcase"></i> Descripción del Puesto
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
         <!-- Sección de Introducción -->
         <div id="intro-section" class="main-section active">
             <div class="card">
@@ -504,12 +482,6 @@
                             <li>Verificación de empresas mencionadas en el CV</li>
                             <li>Análisis de fortalezas y brechas del candidato</li>
                         </ul>
-                        
-                        <div style="text-align: center; margin-top: 2rem;">
-                            <button class="btn btn-lg" id="go-to-upload">
-                                <i class="fas fa-upload"></i> Comenzar a cargar CVs
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -657,7 +629,7 @@
     </div>
     
     <footer>
-        <p>&copy; 2025 TalentAI - Todos los derechos reservados</p>
+        <p>&copy; 2025 Minsait - TalentAI - Todos los derechos reservados</p>
     </footer>
     
     <script>
@@ -843,12 +815,31 @@
             })
             .then(data => {
                 loading.style.display = 'none';
-                cvResults = data;
-                displayResults();
-                resultsContainer.style.display = 'block';
+                processBtn.disabled = false;
+
+                // Verifica si todos los elementos tienen error
+                const todosFallaron = data.length > 0 && data.every(item => item.error);
                 
-                // Scroll to results
-                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                if (todosFallaron) {
+                    // Si todos fallaron, mostrar alerta general
+                    alert('Ocurrió un error al procesar los CVs. Por favor intenta de nuevo.');
+                    return;
+                }
+
+                // Mostrar errores individuales si existen
+                const errores = data.filter(item => item.error);
+                if (errores.length > 0) {
+                    console.warn("Algunos CVs con errores:", errores);
+                    alert(`Algunos CVs no se pudieron procesar:\n${errores.map(e => `${e.filename}: ${e.error}`).join('\n')}`);
+                }
+
+                cvResults = data.filter(item => !item.error); // Filtra solo los exitosos
+                if (cvResults.length > 0) {
+                    displayResults();
+                    resultsContainer.style.display = 'block';
+                    // Scroll to results
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -867,43 +858,57 @@
                 const card = document.createElement('div');
                 card.className = 'cv-card';
                 card.setAttribute('data-index', index);
-                
-                const compatibility = result.compatibilidad.compatibility_percentage || 0;
-                
-                card.innerHTML = `
-                    <h3>${result.filename}</h3>
-                    <div class="compatibility">
-                        <span>Compatibilidad:</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${compatibility}%;"></div>
+
+                // Mostrar error si existe
+                const errorMsg = result.error ? `<p style="color: red; font-weight: bold;">Error: ${result.error}</p>` : '';
+
+                if (result.error) {
+                    card.innerHTML = `
+                        <h3>${result.filename}</h3>
+                        ${errorMsg}
+                    `;
+                } else {
+                    const compatibility = result.compatibilidad.compatibility_percentage || 0;
+
+                    card.innerHTML = `
+                        <h3>${result.filename}</h3>
+                        ${errorMsg}
+                        <div class="compatibility">
+                            <span>Compatibilidad:</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${compatibility}%;"></div>
+                            </div>
+                            <span>${compatibility}%</span>
                         </div>
-                        <span>${compatibility}%</span>
-                    </div>
-                    <p><strong>Habilidades:</strong> ${result.cv_info.skills.slice(0, 3).join(', ')}${result.cv_info.skills.length > 3 ? '...' : ''}</p>
-                `;
-                
+                        <p><strong>Habilidades:</strong> ${result.cv_info.skills.slice(0, 3).join(', ')}${result.cv_info.skills.length > 3 ? '...' : ''}</p>
+                    `;
+                }
+
                 cvOverview.appendChild(card);
                 
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.cv-card').forEach(c => c.style.borderLeftColor = 'var(--primary)');
-                    card.style.borderLeftColor = '#28a745';
-                    showCVDetail(result);
-                    
-                    // Set current chat session
-                    currentChatSessionId = result.session_id;
-                    
-                    // Switch to detail tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    document.querySelector('.tab[data-tab="details"]').classList.add('active');
-                    
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
+                // Si hay error, no se habilita el clic para detalle/chat
+                if (!result.error) {
+                    card.addEventListener('click', () => {
+                        document.querySelectorAll('.cv-card').forEach(c => c.style.borderLeftColor = 'var(--primary)');
+                        card.style.borderLeftColor = '#28a745';
+                        showCVDetail(result);
+                        
+                        // Set current chat session
+                        currentChatSessionId = result.session_id;
+                        
+                        // Switch to detail tab
+                        tabs.forEach(t => t.classList.remove('active'));
+                        document.querySelector('.tab[data-tab="details"]').classList.add('active');
+                        
+                        tabContents.forEach(content => {
+                            content.classList.remove('active');
+                        });
+                        document.getElementById('details').classList.add('active');
                     });
-                    document.getElementById('details').classList.add('active');
-                });
+                }
             });
         }
-        
+                
         function showCVDetail(result) {
             const cv = result.cv_info;
             const compatibility = result.compatibilidad;
